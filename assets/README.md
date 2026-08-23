@@ -30,12 +30,10 @@ Particle textures are designed to be used with Godot's `GPUParticles2D/3D` or
 |---------------------------------|-----------------|-------------------------------------------------|
 | `art/enemies/monsters/big/`     | Ultimate Monsters | 16 large monster models (GLTF)                 |
 | `art/enemies/monsters/blob/`    | Ultimate Monsters | 17 blob-style monster models (GLTF)            |
-| `art/enemies/monsters/flying/`  | Ultimate Monsters | 8 flying monster models (GLTF, see below)      |
+| `art/enemies/monsters/flying/`  | Ultimate Monsters | 17 flying monster models (GLTF)                |
 
-> The Ultimate Monsters pack contains 50 monsters total. 9 of the flying-style
-> models (Ghost_Skull, Glub, Glub_Evolved, Goleling, Goleling_Evolved, Hywirl,
-> Pigeon, Squidle, Tribal) could not be downloaded yet due to Google Drive
-> rate limiting; retry the download script when the limit clears.
+The Ultimate Monsters pack (CC0) provides 50 total monster models across the
+three styles for enemy variety.
 
 ## Mixamo animations (Adobe)
 
