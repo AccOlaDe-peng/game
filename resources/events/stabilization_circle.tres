@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RunEventDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/events/RunEventDefinition.cs" id="1_event"]
+
+[resource]
+script = ExtResource("1_event")
+Id = &"event.stabilization_circle"
+DisplayName = "稳定法阵"
+Kind = 1
+Radius = 5.5
+RequiredProgressSeconds = 10.0
+TimeLimitSeconds = 42.0
+LeaveDecayPerSecond = 0.35
+ExperienceReward = 10
+ActivePressureMultiplier = 1.18

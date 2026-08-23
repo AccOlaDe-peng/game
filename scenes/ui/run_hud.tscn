@@ -1,0 +1,369 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/RunHud.cs" id="1_hud"]
+[ext_resource type="Theme" path="res://resources/ui/adventure_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/panel_brown_dark.png" id="3_panel"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/progress_red.png" id="4_red"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/progress_green.png" id="5_green"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/progress_blue.png" id="6_blue"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/progress_transparent.png" id="7_progress_bg"]
+
+[sub_resource type="StyleBoxTexture" id="StyleRed"]
+texture = ExtResource("4_red")
+texture_margin_left = 7.0
+texture_margin_top = 10.0
+texture_margin_right = 7.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleGreen"]
+texture = ExtResource("5_green")
+texture_margin_left = 7.0
+texture_margin_top = 10.0
+texture_margin_right = 7.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBlue"]
+texture = ExtResource("6_blue")
+texture_margin_left = 7.0
+texture_margin_top = 10.0
+texture_margin_right = 7.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleProgressBackground"]
+texture = ExtResource("7_progress_bg")
+texture_margin_left = 7.0
+texture_margin_top = 10.0
+texture_margin_right = 7.0
+texture_margin_bottom = 10.0
+
+[node name="RunHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_hud")
+
+[node name="TopFrame" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = 70.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("3_panel")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="StatusFrame" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 74.0
+offset_right = 334.0
+offset_bottom = 202.0
+mouse_filter = 2
+texture = ExtResource("3_panel")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="CatalyzeFrame" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -334.0
+offset_top = -122.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+texture = ExtResource("3_panel")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = 62.0
+grow_horizontal = 2
+theme_override_constants/separation = 18
+
+[node name="TimeLabel" type="Label" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "00:00"
+
+[node name="StateLabel" type="Label" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.85, 1, 1)
+text = "Loading"
+
+[node name="SeedLabel" type="Label" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.55, 0.6, 0.7, 1)
+text = "Seed: -"
+
+[node name="PauseButton" type="Button" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 0
+text = "暂停"
+
+[node name="Status" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 82.0
+offset_right = 320.0
+offset_bottom = 184.0
+theme_override_constants/separation = 5
+
+[node name="HealthLabel" type="Label" parent="Status"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.68, 0.68, 1)
+text = "生命 100 / 100"
+
+[node name="HealthBar" type="ProgressBar" parent="Status"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 18)
+layout_mode = 2
+max_value = 100.0
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleRed")
+
+[node name="LevelLabel" type="Label" parent="Status"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 1, 0.82, 1)
+text = "等级 1"
+
+[node name="ExperienceBar" type="ProgressBar" parent="Status"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 14)
+layout_mode = 2
+max_value = 6.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleGreen")
+
+[node name="CatalyzeStatus" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -105.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="CatalyzeLabel" type="Label" parent="CatalyzeStatus"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.88, 1, 1)
+text = "元素催化：就绪"
+horizontal_alignment = 2
+
+[node name="CatalyzeBar" type="ProgressBar" parent="CatalyzeStatus"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 16)
+layout_mode = 2
+max_value = 5.0
+value = 5.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleBlue")
+
+[node name="SpellHint" type="Label" parent="CatalyzeStatus"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.76, 0.44, 1)
+text = "奥术飞弹 1"
+horizontal_alignment = 2
+
+[node name="ReactionLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 88.0
+offset_bottom = 138.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.38, 1)
+theme_override_font_sizes/font_size = 30
+text = "热裂"
+horizontal_alignment = 1
+
+[node name="Objective" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 142.0
+offset_bottom = 198.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="ObjectiveLabel" type="Label" parent="Objective"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 1, 0.74, 1)
+theme_override_font_sizes/font_size = 18
+text = "事件目标"
+horizontal_alignment = 1
+
+[node name="ObjectiveBar" type="ProgressBar" parent="Objective"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(360, 14)
+layout_mode = 2
+size_flags_horizontal = 4
+show_percentage = false
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleGreen")
+
+[node name="EliteStatus" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 204.0
+offset_bottom = 260.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="EliteLabel" type="Label" parent="EliteStatus"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.62, 0.16, 1)
+theme_override_font_sizes/font_size = 17
+text = "冲锋精英"
+horizontal_alignment = 1
+
+[node name="EliteBar" type="ProgressBar" parent="EliteStatus"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(420, 14)
+layout_mode = 2
+size_flags_horizontal = 4
+show_percentage = false
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleRed")
+
+[node name="BossStaggerBar" type="ProgressBar" parent="EliteStatus"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(420, 10)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleBlue")
+
+[node name="Hint" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -52.0
+offset_right = 580.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+text = "WASD / 左摇杆移动  ·  Space / A闪避  ·  鼠标右键 / RT元素催化  ·  Esc暂停"
+
+[node name="PausePanel" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.01, 0.015, 0.025, 0.82)
+
+[node name="Center" type="CenterContainer" parent="PausePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="VBoxContainer" parent="PausePanel/Center"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="PauseTitle" type="Label" parent="PausePanel/Center/Menu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "暂停"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PausePanel/Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 50)
+layout_mode = 2
+text = "继续"
+
+[node name="SettingsButton" type="Button" parent="PausePanel/Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
+layout_mode = 2
+text = "设置"
+
+[node name="RestartButton" type="Button" parent="PausePanel/Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
+layout_mode = 2
+text = "重新开始"
+
+[node name="ReturnButton" type="Button" parent="PausePanel/Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
+layout_mode = 2
+text = "返回主菜单"
+
+[node name="RestartConfirmation" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+title = "确认重新开始"
+dialog_text = "当前对局进度不会保留，确定重新开始吗？"
+ok_button_text = "重新开始"
+cancel_button_text = "取消"

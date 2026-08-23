@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/UpgradeScreen.cs" id="1_upgrade_screen"]
+
+[node name="UpgradeScreen" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_upgrade_screen")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.012, 0.018, 0.035, 0.92)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="Title" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "元素共鸣增强"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.72, 0.8, 1)
+text = "选择一项升级，战斗将在选择后继续"
+horizontal_alignment = 1
+
+[node name="Choices" type="HBoxContainer" parent="Center/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Choice1" type="Button" parent="Center/Content/Choices"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "升级一"
+text_overrun_behavior = 0
+autowrap_mode = 2
+
+[node name="Choice2" type="Button" parent="Center/Content/Choices"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "升级二"
+text_overrun_behavior = 0
+autowrap_mode = 2
+
+[node name="Choice3" type="Button" parent="Center/Content/Choices"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "升级三"
+text_overrun_behavior = 0
+autowrap_mode = 2
+
+[node name="RerollButton" type="Button" parent="Center/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "刷新（剩余 1 次）"

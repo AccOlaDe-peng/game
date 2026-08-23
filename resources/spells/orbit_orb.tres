@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SpellDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/spells/SpellDefinition.cs" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+Id = &"spell.orbit_orb"
+DisplayName = "环绕法球"
+Description = "环绕施法者并持续打击近身敌人，可通过分支获得元素附魔。"
+CastKind = 4
+Element = 0
+BaseDamage = 2.5
+Cooldown = 0.5
+Range = 3.2
+ProjectileSpeed = 0.0
+Lifetime = 0.0
+ElementStacks = 0
+MaximumHits = 1

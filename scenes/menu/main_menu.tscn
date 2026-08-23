@@ -1,0 +1,144 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu/MainMenu.cs" id="1_menu"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings_screen.tscn" id="2_settings"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.025, 0.035, 0.055, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_top = 8.0
+offset_bottom = -8.0
+
+[node name="Menu" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.86, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "PROJECT CATALYST"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 16
+text = "元素反应 · 单机纵向切片"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Center/Menu"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="RecordLabel" type="Label" parent="Center/Menu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.64, 0.74, 0.84, 1)
+text = "尚无挑战记录"
+horizontal_alignment = 1
+
+[node name="CharacterHeading" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "选择角色与起始武器"
+horizontal_alignment = 1
+
+[node name="CharacterButtons" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ElementalistButton" type="Button" parent="Center/Menu/CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 64)
+layout_mode = 2
+text = "元素行者\n脉冲步枪"
+
+[node name="HunterButton" type="Button" parent="Center/Menu/CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 64)
+layout_mode = 2
+text = "回响猎手\n弹射圆盘"
+
+[node name="EngineerButton" type="Button" parent="Center/Menu/CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 64)
+layout_mode = 2
+text = "裂隙工匠\n元素地雷"
+
+[node name="SelectionLabel" type="Label" parent="Center/Menu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.76, 0.3, 1)
+text = "已选择：元素行者 · 脉冲步枪"
+horizontal_alignment = 1
+
+[node name="CharacterDetailsLabel" type="Label" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(590, 76)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.76, 0.87, 1)
+theme_override_font_sizes/font_size = 13
+text = "直线投射 · 入门"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(590, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "使用所选角色开始"
+
+[node name="SettingsButton" type="Button" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(590, 42)
+layout_mode = 2
+text = "设置"
+
+[node name="QuitButton" type="Button" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(590, 42)
+layout_mode = 2
+text = "退出"
+
+[node name="Version" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -36.0
+offset_right = -20.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.45, 0.5, 0.6, 1)
+text = "M4 · Godot 4.7.1"
+horizontal_alignment = 2
+
+[node name="SettingsScreen" parent="." instance=ExtResource("2_settings")]

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="SpellDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/spells/SpellDefinition.cs" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+Id = &"spell.chain_lightning"
+DisplayName = "链式闪电"
+Description = "依次跳向附近未命中的目标并施加感电。"
+CastKind = 3
+Element = 3
+BaseDamage = 3.0
+Cooldown = 1.45
+Range = 32.0
+ProjectileSpeed = 0.0
+Lifetime = 0.0
+ElementStacks = 1
+MaximumHits = 1
+ChainCount = 4
+ChainRange = 6.0

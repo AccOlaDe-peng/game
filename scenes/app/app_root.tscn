@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/app/AppRoot.cs" id="1_app"]
+[ext_resource type="Script" path="res://scripts/app/SceneRouter.cs" id="2_router"]
+[ext_resource type="PackedScene" path="res://scenes/menu/main_menu.tscn" id="3_menu"]
+[ext_resource type="PackedScene" path="res://scenes/run/run_arena_01.tscn" id="4_run"]
+
+[node name="AppRoot" type="Node"]
+script = ExtResource("1_app")
+MainMenuScene = ExtResource("3_menu")
+RunScene = ExtResource("4_run")
+
+[node name="CurrentScreen" type="Node" parent="."]
+
+[node name="SceneRouter" type="Node" parent="."]
+script = ExtResource("2_router")
+
+[node name="TransitionLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="Fade" type="ColorRect" parent="TransitionLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.03, 0.05, 1)

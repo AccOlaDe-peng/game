@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrades/UpgradeDefinition.cs" id="1_upgrade"]
+
+[resource]
+script = ExtResource("1_upgrade")
+Id = &"upgrade.energy_magnet"
+DisplayName = "能量磁场"
+Description = "经验能量吸附范围提高 25%"
+Effect = 5
+Multiplier = 1.25

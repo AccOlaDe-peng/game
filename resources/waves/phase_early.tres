@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WaveDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/waves/WaveDefinition.cs" id="1_wave"]
+
+[resource]
+script = ExtResource("1_wave")
+Id = &"wave.early"
+DisplayName = "初潮"
+StartsAtSeconds = 0.0
+SpawnInterval = 0.55
+BatchSize = 1
+ThreatMultiplier = 1.0

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyDefinition.cs" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+Id = &"enemy.elite_charger"
+DisplayName = "冲锋精英"
+Archetype = 6
+IsElite = true
+MaxHealth = 450.0
+MoveSpeed = 2.3
+Radius = 1.2
+ExperienceValue = 20
+ContactDamage = 12.0
+AttackCooldown = 5.0
+SpecialDamage = 14.0
+VisualScale = 2.0
+SpawnCost = 18.0
+AppearsAfterSeconds = 180.0
+SpawnWeight = 0.08
+MaximumAlive = 2
+DisplayColor = Color(1, 0.58, 0.08, 1)

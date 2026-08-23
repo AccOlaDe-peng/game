@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyDefinition.cs" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+Id = &"boss.ashen_colossus"
+DisplayName = "灰烬巨像"
+Archetype = 8
+IsElite = true
+MaxHealth = 3600.0
+MoveSpeed = 2.15
+Radius = 2.6
+ExperienceValue = 100
+ContactDamage = 18.0
+AttackCooldown = 4.0
+SpecialDamage = 28.0
+VisualScale = 4.6
+SpawnCost = 100.0
+AppearsAfterSeconds = 720.0
+SpawnWeight = 0.0
+MaximumAlive = 1
+DisplayColor = Color(0.92, 0.22, 0.07, 1)

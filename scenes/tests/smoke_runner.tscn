@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/tests/SmokeRunner.cs" id="1_smoke"]
+[ext_resource type="PackedScene" path="res://scenes/app/app_root.tscn" id="2_app"]
+
+[node name="SmokeRunner" type="Node"]
+script = ExtResource("1_smoke")
+AppScene = ExtResource("2_app")

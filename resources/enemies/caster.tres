@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyDefinition.cs" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+Id = &"enemy.caster"
+DisplayName = "投射者"
+Archetype = 3
+MaxHealth = 65.0
+MoveSpeed = 1.8
+Radius = 0.6
+ExperienceValue = 3
+ContactDamage = 3.0
+PreferredDistance = 12.0
+AttackCooldown = 3.0
+SpecialDamage = 7.0
+VisualScale = 1.0
+SpawnCost = 2.5
+AppearsAfterSeconds = 120.0
+SpawnWeight = 1.4
+MaximumAlive = 50
+DisplayColor = Color(0.62, 0.28, 0.86, 1)

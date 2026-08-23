@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SpellDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/spells/SpellDefinition.cs" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+Id = &"weapon.element_mine"
+DisplayName = "元素地雷"
+Description = "在目标位置部署装置，等待引信结束后造成范围爆炸。"
+CastKind = 6
+Element = 0
+BaseDamage = 8.8
+Cooldown = 1.4
+Range = 32.0
+ProjectileSpeed = 0.0
+Lifetime = 0.65
+ElementStacks = 0
+MaximumHits = 1
+ExplosionRadius = 3.4

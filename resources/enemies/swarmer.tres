@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyDefinition.cs" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+Id = &"enemy.swarmer"
+DisplayName = "群行者"
+Archetype = 0
+MaxHealth = 38.0
+MoveSpeed = 2.6
+Radius = 0.55
+ExperienceValue = 1
+ContactDamage = 4.0
+VisualScale = 0.9
+SpawnCost = 1.0
+SpawnWeight = 5.0
+MaximumAlive = 500
+DisplayColor = Color(0.78, 0.22, 0.32, 1)

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyDefinition.cs" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+Id = &"enemy.element_guard"
+DisplayName = "元素守卫"
+Archetype = 7
+IsElite = true
+MaxHealth = 520.0
+MoveSpeed = 1.8
+Radius = 1.25
+ExperienceValue = 22
+ContactDamage = 10.0
+AttackCooldown = 4.0
+SpecialDamage = 10.0
+VisualScale = 2.1
+SpawnCost = 20.0
+AppearsAfterSeconds = 300.0
+SpawnWeight = 0.06
+MaximumAlive = 2
+DisplayColor = Color(0.18, 0.72, 0.94, 1)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrades/UpgradeDefinition.cs" id="1_upgrade"]
+
+[resource]
+script = ExtResource("1_upgrade")
+Id = &"upgrade.swift_steps"
+DisplayName = "疾行"
+Description = "移动速度提高 10%"
+Effect = 2
+Multiplier = 1.1

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SpellDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/spells/SpellDefinition.cs" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+Id = &"spell.frost_lance"
+DisplayName = "冰锥"
+Description = "穿透多个敌人，施加寒冷并降低移动速度。"
+CastKind = 2
+Element = 2
+BaseDamage = 3.5
+Cooldown = 0.95
+Range = 32.0
+ProjectileSpeed = 19.8
+Lifetime = 2.2
+ElementStacks = 1
+MaximumHits = 4

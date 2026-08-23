@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WaveDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/waves/WaveDefinition.cs" id="1_wave"]
+
+[resource]
+script = ExtResource("1_wave")
+Id = &"wave.finale"
+DisplayName = "终局"
+StartsAtSeconds = 600.0
+SpawnInterval = 0.18
+BatchSize = 4
+ThreatMultiplier = 1.9

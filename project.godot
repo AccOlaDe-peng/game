@@ -1,0 +1,93 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Project Catalyst"
+run/main_scene="res://scenes/app/app_root.tscn"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+boot_splash/bg_color=Color(0.025, 0.035, 0.055, 1)
+
+[autoload]
+
+SettingsService="*res://scripts/app/SettingsService.cs"
+SaveService="*res://scripts/app/SaveService.cs"
+ContentCatalog="*res://scripts/app/ContentCatalog.cs"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+
+[dotnet]
+
+project/assembly_name="Catalyst"
+
+[input]
+
+move_left={
+"deadzone": 0.2,
+"events": []
+}
+move_right={
+"deadzone": 0.2,
+"events": []
+}
+move_forward={
+"deadzone": 0.2,
+"events": []
+}
+move_back={
+"deadzone": 0.2,
+"events": []
+}
+aim_left={
+"deadzone": 0.2,
+"events": []
+}
+aim_right={
+"deadzone": 0.2,
+"events": []
+}
+aim_up={
+"deadzone": 0.2,
+"events": []
+}
+aim_down={
+"deadzone": 0.2,
+"events": []
+}
+dodge={
+"deadzone": 0.5,
+"events": []
+}
+catalyze={
+"deadzone": 0.5,
+"events": []
+}
+pause={
+"deadzone": 0.5,
+"events": []
+}
+
+[layer_names]
+
+3d_physics/layer_1="World"
+3d_physics/layer_2="Player"
+3d_physics/layer_3="Enemy"
+3d_physics/layer_4="Pickup"
+3d_physics/layer_5="EnemyAttack"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.025, 0.035, 0.055, 1)

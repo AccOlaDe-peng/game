@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SpellDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/spells/SpellDefinition.cs" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+Id = &"spell.fireball"
+DisplayName = "火球"
+Description = "命中后爆炸，并向范围内敌人施加燃烧。"
+CastKind = 1
+Element = 1
+BaseDamage = 5.0
+Cooldown = 1.25
+Range = 32.0
+ProjectileSpeed = 15.84
+Lifetime = 2.4
+ElementStacks = 1
+MaximumHits = 1
+ExplosionRadius = 3.2

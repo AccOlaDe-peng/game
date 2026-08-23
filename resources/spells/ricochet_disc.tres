@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="SpellDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/spells/SpellDefinition.cs" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+Id = &"weapon.ricochet_disc"
+DisplayName = "弹射圆盘"
+Description = "命中后自动寻找附近尚未命中的目标，基础弹射两次。"
+CastKind = 5
+Element = 0
+BaseDamage = 5.4
+Cooldown = 0.9
+Range = 32.0
+ProjectileSpeed = 16.0
+Lifetime = 3.0
+ElementStacks = 0
+MaximumHits = 3
+ChainCount = 2
+ChainRange = 6.0

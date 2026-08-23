@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyDefinition.cs" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+Id = &"enemy.summoner"
+DisplayName = "召唤者"
+Archetype = 5
+MaxHealth = 120.0
+MoveSpeed = 1.4
+Radius = 0.72
+ExperienceValue = 6
+ContactDamage = 3.0
+PreferredDistance = 11.0
+AttackCooldown = 6.0
+SpecialDamage = 0.0
+VisualScale = 1.25
+SpawnCost = 5.0
+AppearsAfterSeconds = 240.0
+SpawnWeight = 0.65
+MaximumAlive = 12
+DisplayColor = Color(0.2, 0.78, 0.42, 1)

@@ -1,0 +1,35 @@
+# Godot generated data
+.godot/
+.mono/
+
+# .NET build output
+bin/
+obj/
+
+# Portable local toolchain
+.tools/
+.art_source/
+
+# IDEs
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+
+# Exported builds and local reports
+build/
+dist/
+artifacts/
+reports/
+*.log
+*.trace
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local runtime data
+user_data/
