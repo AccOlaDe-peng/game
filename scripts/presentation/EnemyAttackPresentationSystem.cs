@@ -21,23 +21,7 @@ public partial class EnemyAttackPresentationSystem : Node3D
     public override void _Ready()
     {
         _enemies = GetNode<EnemySystem>("../../../SimulationRoot/EntitySystem");
-        CylinderMesh mesh = new()
-        {
-            TopRadius = 1.0f,
-            BottomRadius = 1.0f,
-            Height = 0.035f,
-            RadialSegments = 24
-        };
-        mesh.Material = new StandardMaterial3D
-        {
-            AlbedoColor = new Color(1.0f, 0.12f, 0.06f, 0.45f),
-            EmissionEnabled = true,
-            Emission = new Color(1.0f, 0.05f, 0.02f),
-            EmissionEnergyMultiplier = 1.4f,
-            Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
-            ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-            VertexColorUseAsAlbedo = true
-        };
+        Mesh mesh = VfxMaterials.BuildGroundMesh(1.0f, "circle_01", new Color(1.0f, 0.12f, 0.06f, 0.45f), additive: false);
         _multiMesh = new MultiMesh
         {
             TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
@@ -71,7 +55,7 @@ public partial class EnemyAttackPresentationSystem : Node3D
         {
             WarningPulse pulse = _pulses[index];
             float progress = pulse.Age / pulse.Lifetime;
-            float scale = pulse.Radius * (0.85f + 0.15f * Mathf.Sin(progress * Mathf.Pi * 6.0f));
+            float scale = pulse.Radius * 2.0f * (0.85f + 0.15f * Mathf.Sin(progress * Mathf.Pi * 6.0f));
             Basis basis = Basis.Identity.Scaled(new Vector3(scale, 1.0f, scale));
             _multiMesh.SetInstanceTransform(index,
                 new Transform3D(basis, new Vector3(pulse.Position.X, 0.08f, pulse.Position.Y)));

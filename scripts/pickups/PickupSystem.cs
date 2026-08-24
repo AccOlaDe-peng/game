@@ -1,5 +1,6 @@
 using Catalyst.Enemies;
 using Catalyst.Player;
+using Catalyst.Presentation;
 using Catalyst.Run;
 using Godot;
 
@@ -28,6 +29,8 @@ public partial class PickupSystem : Node
     private MultiMesh _multiMesh = null!;
 
     public int ActiveCount { get; private set; }
+
+    public event Action? PickupCollected;
 
     public override void _Ready()
     {
@@ -62,6 +65,7 @@ public partial class PickupSystem : Node
             if (distanceSquared <= collectionSquared)
             {
                 _progression.AddExperience(pickup.Value);
+                PickupCollected?.Invoke();
                 RemoveAt(index);
                 continue;
             }
@@ -140,21 +144,7 @@ public partial class PickupSystem : Node
 
     private void BuildPresentation()
     {
-        SphereMesh mesh = new()
-        {
-            Radius = 0.16f,
-            Height = 0.32f,
-            RadialSegments = 8,
-            Rings = 4
-        };
-        mesh.Material = new StandardMaterial3D
-        {
-            AlbedoColor = new Color(0.34f, 1.0f, 0.66f, 1.0f),
-            EmissionEnabled = true,
-            Emission = new Color(0.08f, 0.72f, 0.35f, 1.0f),
-            EmissionEnergyMultiplier = 1.8f,
-            Roughness = 0.25f
-        };
+        Mesh mesh = VfxMaterials.BuildBillboardMesh(0.34f, "star_01", new Color(0.34f, 1.0f, 0.66f, 1.0f));
 
         _multiMesh = new MultiMesh
         {

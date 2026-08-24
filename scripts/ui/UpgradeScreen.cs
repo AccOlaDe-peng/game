@@ -5,6 +5,8 @@ namespace Catalyst.UI;
 
 public partial class UpgradeScreen : Control
 {
+    private const string IconBasePath = "res://assets/art/icons/white/";
+
     private readonly Button[] _choiceButtons = new Button[3];
     private UpgradeSystem? _system;
     private Button _rerollButton = null!;
@@ -53,7 +55,8 @@ public partial class UpgradeScreen : Control
             if (hasChoice)
             {
                 UpgradeChoice choice = choices[index];
-                _choiceButtons[index].Text = $"{choice.DisplayName}\n\n{choice.Description}";
+                _choiceButtons[index].Text = $"\n\n{choice.DisplayName}\n\n{choice.Description}";
+                SetChoiceIcon(_choiceButtons[index], choice);
             }
         }
 
@@ -68,5 +71,22 @@ public partial class UpgradeScreen : Control
     private void OnChoicesClosed()
     {
         Visible = false;
+    }
+
+    private static void SetChoiceIcon(Button button, UpgradeChoice choice)
+    {
+        string iconName = choice.Kind switch
+        {
+            UpgradeChoiceKind.AcquireSpell => "plus",
+            UpgradeChoiceKind.UpgradeSpell => "arrowUp",
+            UpgradeChoiceKind.InstallWeaponCard => "target",
+            UpgradeChoiceKind.InstallStandardCard => "checkmark",
+            _ => "star"
+        };
+        Texture2D? texture = ResourceLoader.Load<Texture2D>($"{IconBasePath}{iconName}.png");
+        if (button.GetNodeOrNull<TextureRect>("Icon") is TextureRect icon)
+        {
+            icon.Texture = texture;
+        }
     }
 }

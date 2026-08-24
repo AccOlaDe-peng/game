@@ -29,12 +29,22 @@ public partial class EnemySystem : Node
     private PlayerHealth _playerHealth = null!;
     private RunController _run = null!;
     private RunStatistics _statistics = null!;
-    private MultiMeshInstance3D _view = null!;
-    private MultiMesh _multiMesh = null!;
-    private float _presentationScale = 1.0f;
-    private float _presentationGroundOffset = 0.625f;
+    private ArchetypePresentation[] _presentations = null!;
 
-    private const string EnemyModelPath = "res://assets/art/enemies/orc/Orc.gltf";
+    private const float PresentationTargetHeight = 1.0f;
+
+    private static readonly string[] ArchetypeModelPaths =
+    {
+        "res://assets/art/enemies/monsters/blob/GreenBlob.gltf",
+        "res://assets/art/enemies/monsters/blob/Cat.gltf",
+        "res://assets/art/enemies/monsters/big/Yeti.gltf",
+        "res://assets/art/enemies/monsters/blob/Wizard.gltf",
+        "res://assets/art/enemies/monsters/blob/GreenSpikyBlob.gltf",
+        "res://assets/art/enemies/monsters/flying/Ghost.gltf",
+        "res://assets/art/enemies/monsters/flying/Dragon.gltf",
+        "res://assets/art/enemies/monsters/big/Alien.gltf",
+        "res://assets/art/enemies/monsters/big/MushroomKing.gltf"
+    };
 
     public int ActiveCount { get; private set; }
 
@@ -44,7 +54,6 @@ public partial class EnemySystem : Node
         _playerHealth = GetNode<PlayerHealth>("../../WorldRoot/Player/HealthComponent");
         _run = GetNode<RunController>("../RunController");
         _statistics = GetNode<RunStatistics>("../RunStatistics");
-        _view = GetNode<MultiMeshInstance3D>("../../WorldRoot/EnemyPresentation/SwarmerMultiMesh");
 
         _states = new EnemyState[Capacity];
         _denseToSlot = new int[Capacity];
@@ -507,77 +516,123 @@ public partial class EnemySystem : Node
 
     private void BuildPresentation()
     {
-        Mesh mesh = LoadEnemyMesh() ?? BuildFallbackMesh();
-        Aabb bounds = mesh.GetAabb();
-        if (bounds.Size.Y > 0.01f && mesh is not BoxMesh)
+        Node3D container = GetNode<Node3D>("../../WorldRoot/EnemyPresentation");
+        _presentations = new ArchetypePresentation[ArchetypeModelPaths.Length];
+        for (int archetype = 0; archetype < ArchetypeModelPaths.Length; archetype++)
         {
-            _presentationScale = 0.54f;
-            _presentationGroundOffset = -bounds.Position.Y * _presentationScale;
+            Mesh? mesh = LoadEnemyMesh(ArchetypeModelPaths[archetype]) ?? BuildFallbackMesh();
+            float scale = PresentationTargetHeight / Math.Max(0.01f, mesh.GetAabb().Size.Y);
+            float groundOffset = -mesh.GetAabb().Position.Y * scale;
+
+            MultiMeshInstance3D view = new()
+            {
+                Name = $"Archetype{(EnemyArchetype)archetype}"
+            };
+            container.AddChild(view);
+            MultiMesh multiMesh = new()
+            {
+                TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
+                UseColors = true,
+                Mesh = mesh,
+                InstanceCount = Capacity,
+                VisibleInstanceCount = 0
+            };
+            view.Multimesh = multiMesh;
+            _presentations[archetype] = new ArchetypePresentation
+            {
+                View = view,
+                MultiMesh = multiMesh,
+                Scale = scale,
+                GroundOffset = groundOffset
+            };
         }
-        _multiMesh = new MultiMesh
-        {
-            TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
-            UseCustomData = true,
-            UseColors = true,
-            Mesh = mesh,
-            InstanceCount = Capacity,
-            VisibleInstanceCount = 0
-        };
-        _view.Multimesh = _multiMesh;
     }
 
-    private static Mesh? LoadEnemyMesh()
+    private static Mesh? LoadEnemyMesh(string modelPath)
     {
-        PackedScene? scene = ResourceLoader.Load<PackedScene>(EnemyModelPath);
+        PackedScene? scene = ResourceLoader.Load<PackedScene>(modelPath);
         if (scene is null)
         {
-            GD.PushWarning($"Enemy art could not be loaded: {EnemyModelPath}");
+            GD.PushWarning($"Enemy art could not be loaded: {modelPath}");
             return null;
         }
 
         Node root = scene.Instantiate();
-        MeshInstance3D? meshInstance = FindMeshInstance(root);
-        Mesh? mesh = meshInstance?.Mesh?.Duplicate() as Mesh;
-        root.Free();
-        if (mesh is null)
+        var meshInstances = new List<MeshInstance3D>();
+        CollectMeshInstances(root, meshInstances);
+        if (meshInstances.Count == 0)
         {
+            root.Free();
             GD.PushWarning("Enemy art does not contain a MeshInstance3D; using fallback mesh.");
             return null;
         }
 
-        for (int surface = 0; surface < mesh.GetSurfaceCount(); surface++)
+        Material? sharedMaterial = null;
+        ArrayMesh merged = new();
+        SurfaceTool tool = new();
+        int appendedSurfaces = 0;
+        foreach (MeshInstance3D meshInstance in meshInstances)
         {
-            if (mesh.SurfaceGetMaterial(surface) is not StandardMaterial3D material)
+            Mesh? mesh = meshInstance.Mesh;
+            if (mesh is null)
             {
                 continue;
             }
+            sharedMaterial ??= mesh.SurfaceGetMaterial(0);
+            Transform3D localTransform = TransformRelativeTo(meshInstance, root);
+            for (int surface = 0; surface < mesh.GetSurfaceCount(); surface++)
+            {
+                tool.AppendFrom(mesh, surface, localTransform);
+                appendedSurfaces++;
+            }
+        }
 
+        if (appendedSurfaces == 0)
+        {
+            root.Free();
+            GD.PushWarning("Enemy art has no drawable surfaces; using fallback mesh.");
+            return null;
+        }
+
+        if (sharedMaterial is StandardMaterial3D material)
+        {
             StandardMaterial3D tintedMaterial = (StandardMaterial3D)material.Duplicate();
             tintedMaterial.VertexColorUseAsAlbedo = true;
             tintedMaterial.VertexColorIsSrgb = true;
-            mesh.SurfaceSetMaterial(surface, tintedMaterial);
+            tool.SetMaterial(tintedMaterial);
         }
 
-        return mesh;
+        tool.Commit(merged);
+        root.Free();
+        return merged;
     }
 
-    private static MeshInstance3D? FindMeshInstance(Node node)
+    private static void CollectMeshInstances(Node node, List<MeshInstance3D> output)
     {
         if (node is MeshInstance3D meshInstance)
         {
-            return meshInstance;
+            output.Add(meshInstance);
         }
 
         foreach (Node child in node.GetChildren())
         {
-            MeshInstance3D? match = FindMeshInstance(child);
-            if (match is not null)
-            {
-                return match;
-            }
+            CollectMeshInstances(child, output);
         }
+    }
 
-        return null;
+    private static Transform3D TransformRelativeTo(Node node, Node root)
+    {
+        Transform3D transform = Transform3D.Identity;
+        Node? current = node;
+        while (current is not null && current != root)
+        {
+            if (current is Node3D node3D)
+            {
+                transform = node3D.Transform * transform;
+            }
+            current = current.GetParent();
+        }
+        return transform;
     }
 
     private static Mesh BuildFallbackMesh()
@@ -594,26 +649,32 @@ public partial class EnemySystem : Node
 
     private void SyncPresentation()
     {
+        int[] instanceCounters = new int[ArchetypeModelPaths.Length];
         for (int denseIndex = 0; denseIndex < ActiveCount; denseIndex++)
         {
             EnemyState enemy = _states[denseIndex];
+            int archetype = (int)enemy.Archetype;
+            ArchetypePresentation presentation = _presentations[archetype];
+            int instanceIndex = instanceCounters[archetype]++;
+            if (instanceIndex >= Capacity)
+            {
+                continue;
+            }
+
             float bob = Mathf.Sin(enemy.AnimationPhase) * 0.08f;
             Vector3 origin = new(
                 enemy.Position.X,
-                _presentationGroundOffset * enemy.VisualScale + bob,
+                presentation.GroundOffset * enemy.VisualScale + bob,
                 enemy.Position.Y);
             Vector3 scale = new(
-                _presentationScale * enemy.VisualScale * (enemy.Archetype == EnemyArchetype.Caster ? 0.72f : 1.0f),
-                _presentationScale * enemy.VisualScale * (enemy.Archetype == EnemyArchetype.Exploder ? 0.72f : 1.0f),
-                _presentationScale * enemy.VisualScale);
+                presentation.Scale * enemy.VisualScale * (enemy.Archetype == EnemyArchetype.Caster ? 0.72f : 1.0f),
+                presentation.Scale * enemy.VisualScale * (enemy.Archetype == EnemyArchetype.Exploder ? 0.72f : 1.0f),
+                presentation.Scale * enemy.VisualScale);
             float yaw = enemy.Velocity.LengthSquared() > 0.001f
                 ? Mathf.Atan2(-enemy.Velocity.X, -enemy.Velocity.Y)
                 : 0.0f;
             Basis basis = new Basis(Vector3.Up, yaw).Scaled(scale);
-            _multiMesh.SetInstanceTransform(denseIndex, new Transform3D(basis, origin));
-            _multiMesh.SetInstanceCustomData(denseIndex,
-                new Color(enemy.Health / enemy.MaxHealth, enemy.AnimationPhase % 1.0f,
-                    (float)enemy.Archetype / 9.0f, 1.0f));
+            presentation.MultiMesh.SetInstanceTransform(instanceIndex, new Transform3D(basis, origin));
 
             Color tint = enemy.BaseColor;
             if (enemy.Elements.Fire.Stacks > 0)
@@ -632,9 +693,22 @@ public partial class EnemySystem : Node
             {
                 tint = tint.Lerp(Colors.White, 0.22f);
             }
-            _multiMesh.SetInstanceColor(denseIndex, tint);
+            presentation.MultiMesh.SetInstanceColor(instanceIndex, tint);
         }
-        _multiMesh.VisibleInstanceCount = ActiveCount;
+
+        for (int archetype = 0; archetype < _presentations.Length; archetype++)
+        {
+            _presentations[archetype].MultiMesh.VisibleInstanceCount =
+                Math.Min(instanceCounters[archetype], Capacity);
+        }
+    }
+
+    private struct ArchetypePresentation
+    {
+        public MultiMeshInstance3D View;
+        public MultiMesh MultiMesh;
+        public float Scale;
+        public float GroundOffset;
     }
 
     private static Vector2 ToSimulation(Vector3 position) => new(position.X, position.Z);

@@ -275,8 +275,6 @@ shape = SubResource("Shape_cauldron")
 
 [node name="EnemyPresentation" type="Node3D" parent="WorldRoot"]
 
-[node name="SwarmerMultiMesh" type="MultiMeshInstance3D" parent="WorldRoot/EnemyPresentation"]
-
 [node name="ProjectilePresentation" type="Node3D" parent="WorldRoot"]
 
 [node name="ArcaneMultiMesh" type="MultiMeshInstance3D" parent="WorldRoot/ProjectilePresentation"]

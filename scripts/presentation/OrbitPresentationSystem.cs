@@ -14,15 +14,7 @@ public partial class OrbitPresentationSystem : Node3D
     {
         _spells = GetNode<SpellSystem>("../../../SimulationRoot/SpellSystem");
         _player = GetNode<CharacterBody3D>("../../Player");
-        SphereMesh mesh = new() { Radius = 0.28f, Height = 0.56f, RadialSegments = 10, Rings = 5 };
-        mesh.Material = new StandardMaterial3D
-        {
-            AlbedoColor = Colors.White,
-            EmissionEnabled = true,
-            Emission = new Color(0.3f, 0.7f, 1.0f),
-            EmissionEnergyMultiplier = 1.8f,
-            VertexColorUseAsAlbedo = true
-        };
+        Mesh mesh = VfxMaterials.BuildBillboardMesh(0.56f, "star_03", new Color(0.3f, 0.7f, 1.0f));
         _multiMesh = new MultiMesh
         {
             TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,

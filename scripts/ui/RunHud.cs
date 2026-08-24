@@ -87,7 +87,24 @@ public partial class RunHud : Control
             EmitSignal(SignalName.RestartRequested);
         GetNode<Button>("%SettingsButton").Pressed += () =>
             GetNode<SettingsScreen>("../SettingsScreen").Open();
+        SetButtonIcon(GetNode<Button>("%PauseButton"), "pause");
+        SetButtonIcon(GetNode<Button>("%ResumeButton"), "forward");
+        SetButtonIcon(GetNode<Button>("%SettingsButton"), "gear");
+        SetButtonIcon(GetNode<Button>("%RestartButton"), "rewind");
+        SetButtonIcon(GetNode<Button>("%ReturnButton"), "home");
         RefreshInputHint();
+    }
+
+    private static void SetButtonIcon(Button button, string iconName)
+    {
+        Texture2D? texture = ResourceLoader.Load<Texture2D>(
+            $"res://assets/art/icons/white/{iconName}.png");
+        if (texture is not null)
+        {
+            Image image = texture.GetImage();
+            image.Resize(22, 22, Image.Interpolation.Bilinear);
+            button.Icon = ImageTexture.CreateFromImage(image);
+        }
     }
 
     public override void _Input(InputEvent @event)

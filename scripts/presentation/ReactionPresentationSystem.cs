@@ -41,20 +41,16 @@ public partial class ReactionPresentationSystem : Node3D
         _catalyze = GetNode<CatalyzeAbility>("../../Player/CatalyzeAbility");
         _thermal = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("SteamShock"),
-            new SphereMesh { Radius = 0.65f, Height = 1.3f, RadialSegments = 12, Rings = 6 },
-            new Color(0.4f, 0.9f, 1.0f));
+            VfxMaterials.BuildBillboardMesh(1.3f, "smoke_01", new Color(0.4f, 0.9f, 1.0f)));
         _conductive = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("Conduction"),
-            new BoxMesh { Size = new Vector3(1.5f, 0.1f, 0.18f) },
-            new Color(1.0f, 0.92f, 0.2f));
+            VfxMaterials.BuildGroundMesh(1.5f, "spark_01", new Color(1.0f, 0.92f, 0.2f)));
         _catalyzePulses = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("CatalyzePulse"),
-            new CylinderMesh { TopRadius = 0.8f, BottomRadius = 0.8f, Height = 0.05f, RadialSegments = 24 },
-            new Color(0.24f, 0.72f, 1.0f));
+            VfxMaterials.BuildGroundMesh(1.6f, "circle_02", new Color(0.24f, 0.72f, 1.0f)));
         _lightningBeams = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("LightningBeams"),
-            new BoxMesh { Size = new Vector3(1.0f, 0.055f, 0.07f) },
-            new Color(1.0f, 0.93f, 0.22f));
+            VfxMaterials.BuildVerticalBeamMesh(1.0f, 0.3f, "trace_01", new Color(1.0f, 0.93f, 0.22f)));
         _elements.ReactionTriggered += OnReactionTriggered;
         _spells.LightningJumped += OnLightningJumped;
         _catalyze.Catalyzed += OnCatalyzed;
@@ -208,20 +204,8 @@ public partial class ReactionPresentationSystem : Node3D
 
     private static MultiMesh BuildMultiMesh(
         MultiMeshInstance3D view,
-        PrimitiveMesh mesh,
-        Color color)
+        Mesh mesh)
     {
-        mesh.Material = new StandardMaterial3D
-        {
-            AlbedoColor = color,
-            EmissionEnabled = true,
-            Emission = color,
-            EmissionEnergyMultiplier = 1.6f,
-            VertexColorUseAsAlbedo = true,
-            Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
-            ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-            CullMode = BaseMaterial3D.CullModeEnum.Disabled
-        };
         MultiMesh multiMesh = new()
         {
             TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,

@@ -17,6 +17,7 @@ public partial class SpellSystem : Node
 {
     public event Action<Vector2, Vector2>? LightningJumped;
     public event Action? LoadoutChanged;
+    public event Action<SpellCastKind>? SpellCast;
 
     [Export] public float TargetRange { get; set; } = 32.0f;
     [Export] public bool Enabled { get; set; } = true;
@@ -111,6 +112,7 @@ public partial class SpellSystem : Node
 
             if (cast)
             {
+                SpellCast?.Invoke(runtime.Definition.CastKind);
                 runtime.CooldownRemaining = Math.Max(
                     0.05f,
                     runtime.Stats.Cooldown * CooldownMultiplier);

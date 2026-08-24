@@ -2,6 +2,7 @@ using Catalyst.Combat;
 using Catalyst.Core;
 using Catalyst.Elements;
 using Catalyst.Enemies;
+using Catalyst.Presentation;
 using Catalyst.Run;
 using Catalyst.Spatial;
 using Godot;
@@ -386,22 +387,7 @@ public partial class ProjectileSystem : Node
 
     private void BuildPresentation()
     {
-        SphereMesh mesh = new()
-        {
-            Radius = 0.2f,
-            Height = 0.4f,
-            RadialSegments = 8,
-            Rings = 4
-        };
-        mesh.Material = new StandardMaterial3D
-        {
-            AlbedoColor = Colors.White,
-            EmissionEnabled = true,
-            Emission = new Color(0.3f, 0.65f, 1.0f),
-            EmissionEnergyMultiplier = 2.2f,
-            Roughness = 0.25f,
-            VertexColorUseAsAlbedo = true
-        };
+        Mesh mesh = VfxMaterials.BuildBillboardMesh(0.62f, "magic_03", new Color(0.3f, 0.65f, 1.0f));
 
         _multiMesh = new MultiMesh
         {
