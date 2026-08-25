@@ -407,7 +407,7 @@ public partial class ProjectileSystem : Node
             ProjectileState projectile = _projectiles[index];
             Vector3 origin = new(projectile.Position.X, 0.8f, projectile.Position.Y);
             _multiMesh.SetInstanceTransform(index, new Transform3D(Basis.Identity, origin));
-            _multiMesh.SetInstanceColor(index, GetElementColor(projectile.Element));
+            _multiMesh.SetInstanceColor(index, ElementPalette.For(projectile.Element));
         }
         _multiMesh.VisibleInstanceCount = ActiveCount;
     }
@@ -507,18 +507,6 @@ public partial class ProjectileSystem : Node
         projectile.Hit6 = EntityHandle.Invalid;
         projectile.Hit7 = EntityHandle.Invalid;
     }
-
-    private static Color GetElementColor(ElementType element) => element switch
-    {
-        ElementType.Fire => new Color(1.0f, 0.28f, 0.05f),
-        ElementType.Frost => new Color(0.2f, 0.82f, 1.0f),
-        ElementType.Lightning => new Color(1.0f, 0.9f, 0.18f),
-        ElementType.Water => new Color(0.12f, 0.48f, 1.0f),
-        ElementType.Wind => new Color(0.45f, 1.0f, 0.72f),
-        ElementType.Earth => new Color(0.72f, 0.44f, 0.16f),
-        ElementType.Mark => new Color(0.9f, 0.28f, 1.0f),
-        _ => new Color(0.42f, 0.82f, 1.0f)
-    };
 
     private static float DistanceSquaredToSegment(Vector2 point, Vector2 start, Vector2 end)
     {

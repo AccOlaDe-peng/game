@@ -1,6 +1,7 @@
 using Catalyst.Core;
 using Catalyst.Elements;
 using Catalyst.Player;
+using Catalyst.Presentation;
 using Catalyst.Run;
 using Godot;
 
@@ -30,6 +31,7 @@ public partial class EnemySystem : Node
     private RunController _run = null!;
     private RunStatistics _statistics = null!;
     private ArchetypePresentation[] _presentations = null!;
+    private EliteRingPresentation _eliteRings;
 
     private const float PresentationTargetHeight = 1.0f;
 
@@ -546,6 +548,33 @@ public partial class EnemySystem : Node
                 GroundOffset = groundOffset
             };
         }
+        BuildEliteRings();
+    }
+
+    private void BuildEliteRings()
+    {
+        Node3D container = GetNode<Node3D>("../../WorldRoot/EnemyPresentation");
+        MultiMeshInstance3D view = new() { Name = "EliteRings" };
+        container.AddChild(view);
+        Material? eliteMaterial = ResourceLoader.Load<Material>(
+            "res://assets/art/materials/elite_material.tres");
+        PlaneMesh ringMesh = VfxMaterials.BuildGroundMesh(
+            1.0f, "circle_02", Colors.White, additive: true);
+        if (eliteMaterial is not null)
+        {
+            ringMesh.Material = eliteMaterial;
+        }
+
+        MultiMesh multiMesh = new()
+        {
+            TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
+            UseColors = true,
+            Mesh = ringMesh,
+            InstanceCount = 16,
+            VisibleInstanceCount = 0
+        };
+        view.Multimesh = multiMesh;
+        _eliteRings = new EliteRingPresentation { View = view, MultiMesh = multiMesh };
     }
 
     private static Mesh? LoadEnemyMesh(string modelPath)
@@ -693,8 +722,32 @@ public partial class EnemySystem : Node
             {
                 tint = tint.Lerp(Colors.White, 0.22f);
             }
+            if (enemy.IsElite)
+            {
+                tint = tint.Lerp(Colors.White, 0.28f);
+            }
             presentation.MultiMesh.SetInstanceColor(instanceIndex, tint);
         }
+
+        int eliteRingIndex = 0;
+        for (int denseIndex = 0; denseIndex < ActiveCount; denseIndex++)
+        {
+            EnemyState enemy = _states[denseIndex];
+            if (!enemy.IsElite || eliteRingIndex >= 16)
+            {
+                continue;
+            }
+
+            float pulse = 0.5f + 0.5f * Mathf.Sin(enemy.AnimationPhase * 3.0f);
+            float ringScale = 1.7f * enemy.VisualScale * (1.05f + 0.12f * pulse);
+            Basis ringBasis = Basis.Identity.Scaled(new Vector3(ringScale, 1.0f, ringScale));
+            _eliteRings.MultiMesh.SetInstanceTransform(eliteRingIndex, new Transform3D(
+                ringBasis, new Vector3(enemy.Position.X, 0.04f, enemy.Position.Y)));
+            _eliteRings.MultiMesh.SetInstanceColor(eliteRingIndex,
+                new Color(1, 1, 1, 0.45f + 0.35f * pulse));
+            eliteRingIndex++;
+        }
+        _eliteRings.MultiMesh.VisibleInstanceCount = eliteRingIndex;
 
         for (int archetype = 0; archetype < _presentations.Length; archetype++)
         {
@@ -709,6 +762,12 @@ public partial class EnemySystem : Node
         public MultiMesh MultiMesh;
         public float Scale;
         public float GroundOffset;
+    }
+
+    private struct EliteRingPresentation
+    {
+        public MultiMeshInstance3D View;
+        public MultiMesh MultiMesh;
     }
 
     private static Vector2 ToSimulation(Vector3 position) => new(position.X, position.Z);

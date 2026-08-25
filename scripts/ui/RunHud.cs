@@ -6,6 +6,7 @@ using Catalyst.Events;
 using Catalyst.Enemies;
 using Catalyst.App;
 using Catalyst.Boss;
+using Catalyst.Presentation;
 using Godot;
 
 namespace Catalyst.UI;
@@ -132,9 +133,13 @@ public partial class RunHud : Control
         {
             _catalyzeBar.MaxValue = _catalyze.Cooldown;
             _catalyzeBar.Value = _catalyze.Cooldown - _catalyze.CooldownRemaining;
-            _catalyzeLabel.Text = _catalyze.CooldownRemaining <= 0.0f
+            bool ready = _catalyze.CooldownRemaining <= 0.0f;
+            _catalyzeLabel.Text = ready
                 ? "元素催化：就绪"
                 : $"元素催化：{_catalyze.CooldownRemaining:0.0}s";
+            _catalyzeLabel.AddThemeColorOverride("font_color", ready
+                ? new Color(0.55f, 0.95f, 1.0f)
+                : new Color(0.45f, 0.55f, 0.68f));
         }
 
         _reactionMessageRemaining = Math.Max(0.0, _reactionMessageRemaining - delta);
@@ -256,6 +261,7 @@ public partial class RunHud : Control
             ReactionKind.Conduction => $"{(assist ? "[水+雷] " : string.Empty)}传导闪电  {damage:0}",
             _ => string.Empty
         };
+        _reactionLabel.AddThemeColorOverride("font_color", ElementPalette.Reaction(kind));
         _reactionMessageRemaining = 1.4;
         _reactionLabel.Visible = true;
     }

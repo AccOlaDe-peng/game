@@ -41,16 +41,16 @@ public partial class ReactionPresentationSystem : Node3D
         _catalyze = GetNode<CatalyzeAbility>("../../Player/CatalyzeAbility");
         _thermal = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("SteamShock"),
-            VfxMaterials.BuildBillboardMesh(1.3f, "smoke_01", new Color(0.4f, 0.9f, 1.0f)));
+            VfxMaterials.BuildBillboardMesh(1.3f, "smoke_01", ElementPalette.Reaction(ReactionKind.SteamShock)));
         _conductive = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("Conduction"),
-            VfxMaterials.BuildGroundMesh(1.5f, "spark_01", new Color(1.0f, 0.92f, 0.2f)));
+            VfxMaterials.BuildGroundMesh(1.5f, "spark_01", ElementPalette.Reaction(ReactionKind.Conduction)));
         _catalyzePulses = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("CatalyzePulse"),
-            VfxMaterials.BuildGroundMesh(1.6f, "circle_02", new Color(0.24f, 0.72f, 1.0f)));
+            VfxMaterials.BuildGroundMesh(1.6f, "circle_02", ElementPalette.Arcane));
         _lightningBeams = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("LightningBeams"),
-            VfxMaterials.BuildVerticalBeamMesh(1.0f, 0.3f, "trace_01", new Color(1.0f, 0.93f, 0.22f)));
+            VfxMaterials.BuildVerticalBeamMesh(1.0f, 0.3f, "trace_01", ElementPalette.Lightning));
         _elements.ReactionTriggered += OnReactionTriggered;
         _spells.LightningJumped += OnLightningJumped;
         _catalyze.Catalyzed += OnCatalyzed;

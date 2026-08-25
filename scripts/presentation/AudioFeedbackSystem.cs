@@ -113,8 +113,16 @@ public partial class AudioFeedbackSystem : Node
         foreach (AudioStreamPlayer player in _pool)
         {
             player.Stop();
-            player.QueueFree();
+            if (IsInstanceValid(player))
+            {
+                if (player.IsInsideTree())
+                {
+                    RemoveChild(player);
+                }
+                player.Free();
+            }
         }
+        _pool.Clear();
     }
 
     private void OnReactionTriggered(ReactionKind kind, Vector2 position, float damage)
