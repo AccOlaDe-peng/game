@@ -30,6 +30,9 @@ public partial class M3ContentRunner : Node
                 "Content catalog did not validate the base and V2 weapon definitions.");
 
             RunRoot run = RunScene.Instantiate<RunRoot>();
+            // Scene runners must not depend on the player's saved character;
+            // set it before AddChild so SpellSystem sees the right loadout.
+            GetNode<SaveService>("/root/SaveService").PreviewCharacter("character.elementalist");
             AddChild(run);
             RunController controller = run.GetNode<RunController>("SimulationRoot/RunController");
             SpellSystem spells = run.GetNode<SpellSystem>("SimulationRoot/SpellSystem");

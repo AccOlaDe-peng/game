@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/PlayerController.cs" id="1_player"]
 [ext_resource type="Script" path="res://scripts/player/PlayerHealth.cs" id="2_health"]
 [ext_resource type="Script" path="res://scripts/player/PlayerProgression.cs" id="3_progression"]
-[ext_resource type="Script" path="res://scripts/player/CatalyzeAbility.cs" id="4_catalyze"]
 [ext_resource type="PackedScene" path="res://assets/art/animations/UAL1_Standard.glb" id="5_character"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
@@ -55,9 +54,6 @@ script = ExtResource("2_health")
 [node name="Progression" type="Node" parent="."]
 script = ExtResource("3_progression")
 
-[node name="DodgeComponent" type="Node" parent="."]
 
 [node name="SpellLoadout" type="Node" parent="."]
 
-[node name="CatalyzeAbility" type="Node" parent="."]
-script = ExtResource("4_catalyze")

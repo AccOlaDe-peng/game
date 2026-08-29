@@ -38,7 +38,6 @@ public partial class SpellSystem : Node
     private ProjectileSystem _projectiles = null!;
     private CombatSystem _combat = null!;
     private RunController _run = null!;
-    private PlayerController _playerController = null!;
     private ElementSystem _elements = null!;
     private readonly List<WeaponFieldState> _fields = new(16);
 
@@ -60,11 +59,9 @@ public partial class SpellSystem : Node
         _projectiles = GetNode<ProjectileSystem>("../ProjectileSystem");
         _combat = GetNode<CombatSystem>("../CombatSystem");
         _run = GetNode<RunController>("../RunController");
-        _playerController = GetNode<PlayerController>("../../WorldRoot/Player");
         _elements = GetNode<ElementSystem>("../ElementSystem");
         _combat.HitResolved += OnHitResolved;
         _elements.Frozen += OnFrozen;
-        _playerController.Dodged += OnDodged;
         _projectiles.FieldRequested += OnFieldRequested;
         CharacterDefinition character = GetNode<SaveService>("/root/SaveService").ActiveCharacter;
         AcquireSpell(character.PrototypeStartingSpell);
@@ -116,6 +113,15 @@ public partial class SpellSystem : Node
                 runtime.CooldownRemaining = Math.Max(
                     0.05f,
                     runtime.Stats.Cooldown * CooldownMultiplier);
+                // "On cast" trigger card: deterministic 10% chance (PassiveProc
+                // stream) to leave a ground field at the cast origin.
+                if (runtime.HasStandardEffect(StandardCardEffect.OnDash) &&
+                    runtime.HasStandardEffect(StandardCardEffect.GroundField) &&
+                    _run.RandomStreams.PassiveProc.Randf() <= 0.10f)
+                {
+                    AddField(playerPosition, runtime.Definition.Id, runtime.Stats.Damage,
+                        runtime.Stats.Element, runtime.Stats.ElementStacks, 0);
+                }
             }
         }
         UpdateFields(delta);
@@ -125,7 +131,6 @@ public partial class SpellSystem : Node
     {
         if (IsInstanceValid(_combat)) _combat.HitResolved -= OnHitResolved;
         if (IsInstanceValid(_elements)) _elements.Frozen -= OnFrozen;
-        if (IsInstanceValid(_playerController)) _playerController.Dodged -= OnDodged;
         if (IsInstanceValid(_projectiles)) _projectiles.FieldRequested -= OnFieldRequested;
     }
 
@@ -183,6 +188,53 @@ public partial class SpellSystem : Node
     }
 
     public SpellDefinition GetDefinition(SpellCastKind kind) => _definitions[kind];
+
+    /// <summary>Elementalist payload adapter: discount the first payload card once per run.</summary>
+    public bool PayloadDiscountUsed { get; private set; }
+
+    public bool ApplyPayloadDiscount()
+    {
+        if (PayloadDiscountUsed)
+        {
+            return false;
+        }
+        foreach (SpellRuntime runtime in _loadout)
+        {
+            foreach (string cardId in runtime.InstalledStandardCards.Keys)
+            {
+                StandardCardDefinition card = StandardCardCatalog.Get(cardId);
+                if (card.Category == StandardCardCategory.Payload &&
+                    runtime.DiscountedCardId is null)
+                {
+                    runtime.DiscountedCardId = cardId;
+                    PayloadDiscountUsed = true;
+                    LoadoutChanged?.Invoke();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void SpawnPassiveRadial(Vector2 position, int count, float damage, ElementType element)
+    {
+        _projectiles.SpawnRadial(position, count, damage, 9.0f,
+            "passive.radial_burst", element, 1, 1);
+    }
+
+    public bool ReduceCooldown(StringName weaponId, float seconds)
+    {
+        if (weaponId.IsEmpty || !Enum.TryParse(weaponId.ToString(), out SpellCastKind kind))
+        {
+            return false;
+        }
+        if (!TryGetRuntime(kind, out SpellRuntime? runtime) || runtime is null)
+        {
+            return false;
+        }
+        runtime.CooldownRemaining = Math.Max(0.0f, runtime.CooldownRemaining - seconds);
+        return true;
+    }
 
     public void UnlockElementSpellsForTests()
     {
@@ -251,6 +303,12 @@ public partial class SpellSystem : Node
 
     private bool CastElementMine(SpellRuntime runtime, Vector2 target)
     {
+        // Deployment capacity gate: the capacity-safety passive triggers the
+        // oldest deployment first; without it the creation is refused.
+        if (!_projectiles.EnsureDeploymentCapacity())
+        {
+            return false;
+        }
         SpellStats stats = runtime.Stats;
         return _projectiles.SpawnMine(target, stats.Damage * DamageMultiplier,
             Math.Max(0.1f, stats.Lifetime), Math.Max(1.0f, stats.ExplosionRadius),
@@ -295,20 +353,6 @@ public partial class SpellSystem : Node
         _projectiles.SpawnRadial(enemy.Position, 4, runtime.Stats.Damage * 0.70f,
             runtime.Stats.ProjectileSpeed * 0.85f, runtime.Definition.Id,
             runtime.Stats.Element, runtime.Stats.ElementStacks, context.ChainDepth + 1);
-    }
-
-    private void OnDodged()
-    {
-        Vector2 center = new(_player.GlobalPosition.X, _player.GlobalPosition.Z);
-        foreach (SpellRuntime runtime in _loadout)
-        {
-            if (runtime.HasStandardEffect(StandardCardEffect.OnDash) &&
-                runtime.HasStandardEffect(StandardCardEffect.GroundField))
-            {
-                AddField(center, runtime.Definition.Id, runtime.Stats.Damage,
-                    runtime.Stats.Element, runtime.Stats.ElementStacks, 0);
-            }
-        }
     }
 
     private void OnFieldRequested(Vector2 position, StringName sourceId, float damage,

@@ -7,9 +7,10 @@ public sealed record CharacterDefinition(
     string DisplayName,
     string Role,
     string Description,
-    string ActiveAbility,
-    string PassiveAbility,
     string StartingWeaponId,
     string StartingWeaponName,
     SpellCastKind PrototypeStartingSpell,
-    string UnlockHint);
+    IReadOnlyList<string> CorePassiveIds,
+    IReadOnlyList<SpellCastKind> CompatibleWeaponIds,
+    string UnlockHint,
+    string ArchiveRecordId);

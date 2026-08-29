@@ -2,6 +2,7 @@ using Godot;
 using Catalyst.App;
 using Catalyst.UI;
 using Catalyst.Meta;
+using Catalyst.Passives;
 
 namespace Catalyst.Menu;
 
@@ -31,7 +32,11 @@ public partial class MainMenu : Control
             selectedId = id;
             CharacterDefinition character = CharacterCatalog.Get(id);
             selectionLabel.Text = $"已选择：{character.DisplayName} · {character.StartingWeaponName}";
-            detailsLabel.Text = $"{character.Role}\n{character.Description}\n{character.ActiveAbility}\n{character.PassiveAbility}";
+            // Character page abilities always come from real runtime definitions.
+            // Keep it to names so the fixed-height panel never overflows.
+            string passiveNames = string.Join(" · ", character.CorePassiveIds.Select(passiveId =>
+                PassiveCatalog.Get(passiveId).DisplayName));
+            detailsLabel.Text = $"{character.Role}\n{character.Description}\n核心被动：{passiveNames}";
         }
 
         ConfigureCharacterButton(GetNode<Button>("%ElementalistButton"), CharacterCatalog.Get(CharacterCatalog.ElementalistId), saves, Select);

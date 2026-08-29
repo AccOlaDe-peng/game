@@ -35,10 +35,13 @@ public partial class RunHud : Control
     private Button _resumeButton = null!;
     private PlayerHealth? _health;
     private PlayerProgression? _progression;
-    private CatalyzeAbility? _catalyze;
+    private Passives.AutoCatalysisSystem? _catalysis;
     private ElementSystem? _elements;
     private ProgressBar _catalyzeBar = null!;
     private Label _catalyzeLabel = null!;
+    private Label _catalysisStateLabel = null!;
+    private Label _catalysisRequirementLabel = null!;
+    private Label _catalysisResultLabel = null!;
     private Label _reactionLabel = null!;
     private Label _spellLabel = null!;
     private SpellSystem? _spells;
@@ -67,6 +70,9 @@ public partial class RunHud : Control
         _experienceBar = GetNode<ProgressBar>("%ExperienceBar");
         _catalyzeBar = GetNode<ProgressBar>("%CatalyzeBar");
         _catalyzeLabel = GetNode<Label>("%CatalyzeLabel");
+        _catalysisStateLabel = GetNode<Label>("%CatalysisStateLabel");
+        _catalysisRequirementLabel = GetNode<Label>("%CatalysisRequirementLabel");
+        _catalysisResultLabel = GetNode<Label>("%CatalysisResultLabel");
         _reactionLabel = GetNode<Label>("%ReactionLabel");
         _spellLabel = GetNode<Label>("%SpellHint");
         _objectiveLabel = GetNode<Label>("%ObjectiveLabel");
@@ -129,17 +135,11 @@ public partial class RunHud : Control
 
         TimeSpan time = TimeSpan.FromSeconds(_controller.ElapsedSeconds);
         _timeLabel.Text = $"{(int)time.TotalMinutes:00}:{time.Seconds:00}";
-        if (_catalyze is not null)
+        if (_catalysis is not null)
         {
-            _catalyzeBar.MaxValue = _catalyze.Cooldown;
-            _catalyzeBar.Value = _catalyze.Cooldown - _catalyze.CooldownRemaining;
-            bool ready = _catalyze.CooldownRemaining <= 0.0f;
-            _catalyzeLabel.Text = ready
-                ? "元素催化：就绪"
-                : $"元素催化：{_catalyze.CooldownRemaining:0.0}s";
-            _catalyzeLabel.AddThemeColorOverride("font_color", ready
-                ? new Color(0.55f, 0.95f, 1.0f)
-                : new Color(0.45f, 0.55f, 0.68f));
+            _catalyzeBar.MaxValue = 1.0;
+            _catalyzeBar.Value = _catalysis.Charge;
+            UpdateCatalysisPanel();
         }
 
         _reactionMessageRemaining = Math.Max(0.0, _reactionMessageRemaining - delta);
@@ -157,7 +157,7 @@ public partial class RunHud : Control
         RunController controller,
         PlayerHealth health,
         PlayerProgression progression,
-        CatalyzeAbility catalyze,
+        Passives.AutoCatalysisSystem catalysis,
         ElementSystem elements,
         SpellSystem spells,
         RunEventSystem events,
@@ -167,7 +167,7 @@ public partial class RunHud : Control
         _controller = controller;
         _health = health;
         _progression = progression;
-        _catalyze = catalyze;
+        _catalysis = catalysis;
         _elements = elements;
         _spells = spells;
         _events = events;
@@ -180,7 +180,7 @@ public partial class RunHud : Control
         _spells.LoadoutChanged += RefreshSpellLoadout;
         _events.ObjectiveChanged += OnObjectiveChanged;
         _boss.StaggerChanged += OnBossStaggerChanged;
-        _seedLabel.Text = $"Seed: {_controller.RunSeed}";
+        _seedLabel.Text = $"相位坐标 · Seed: {_controller.RunSeed}";
         OnHealthChanged(_health.CurrentHealth, _health.MaxHealth);
         OnExperienceChanged(
             _progression.Level,
@@ -322,10 +322,43 @@ public partial class RunHud : Control
         _bossStaggerBar.Value = current;
     }
 
+    private void UpdateCatalysisPanel()
+    {
+        Passives.AutoCatalysisSystem catalysis = _catalysis!;
+        // Status text mirrors the device state machine; no skill key exists.
+        (_catalysisStateLabel.Text, string secondary, Color color) = catalysis.State switch
+        {
+            Passives.CatalysisState.Charging => ("催化协议充能中", $"{catalysis.Charge * 100f:0}%",
+                new Color(0.45f, 0.55f, 0.68f)),
+            Passives.CatalysisState.Evaluating => ("正在评估反应区域", $"候选评分 {catalysis.BestScore:0.0}",
+                new Color(0.72f, 0.88f, 1.0f)),
+            Passives.CatalysisState.ReadyWaiting => ("催化协议待触发", "需要至少 2 个有效反应目标",
+                new Color(1.0f, 0.76f, 0.35f)),
+            Passives.CatalysisState.Executing => ("自动催化", $"预计触发 {catalysis.BestReactiveTargetCount} 次反应",
+                new Color(0.55f, 0.95f, 1.0f)),
+            _ => ("催化协议暂停", string.Empty, new Color(0.45f, 0.55f, 0.68f))
+        };
+        _catalyzeLabel.Text = secondary;
+        _catalysisStateLabel.Text = _catalysisStateLabel.Text;
+        _catalysisStateLabel.AddThemeColorOverride("font_color", color);
+        _catalysisRequirementLabel.Text = $"候选 {catalysis.BestReactiveTargetCount}  ·  评分 {catalysis.BestScore:0.0}";
+        _catalysisResultLabel.Visible = catalysis.LastResultRemaining > 0.0;
+        _catalysisResultLabel.Text = catalysis.LastResultText;
+    }
+
     private void RefreshInputHint()
     {
         _inputHint.Text = _usingGamepad
-            ? "左摇杆移动  ·  A 闪避  ·  RT 元素催化  ·  菜单键暂停"
-            : "WASD 移动  ·  Space 闪避  ·  鼠标右键元素催化  ·  Esc 暂停";
+            ? "左摇杆移动  ·  菜单键暂停"
+            : "WASD 移动  ·  Esc 暂停";
+    }
+
+    /// <summary>Short transient announcement (elite incoming, objective, …).</summary>
+    public void ShowAnnouncement(string text, Color color)
+    {
+        _reactionLabel.Text = text;
+        _reactionLabel.AddThemeColorOverride("font_color", color);
+        _reactionMessageRemaining = 3.0;
+        _reactionLabel.Visible = true;
     }
 }

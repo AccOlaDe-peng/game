@@ -1,5 +1,5 @@
 using Catalyst.Elements;
-using Catalyst.Player;
+using Catalyst.Passives;
 using Catalyst.Spells;
 using Godot;
 
@@ -28,7 +28,7 @@ public partial class ReactionPresentationSystem : Node3D
     private readonly List<Beam> _beams = new(32);
     private ElementSystem _elements = null!;
     private SpellSystem _spells = null!;
-    private CatalyzeAbility _catalyze = null!;
+    private AutoCatalysisSystem _catalyze = null!;
     private MultiMesh _thermal = null!;
     private MultiMesh _conductive = null!;
     private MultiMesh _catalyzePulses = null!;
@@ -38,7 +38,7 @@ public partial class ReactionPresentationSystem : Node3D
     {
         _elements = GetNode<ElementSystem>("../../../SimulationRoot/ElementSystem");
         _spells = GetNode<SpellSystem>("../../../SimulationRoot/SpellSystem");
-        _catalyze = GetNode<CatalyzeAbility>("../../Player/CatalyzeAbility");
+        _catalyze = GetNode<AutoCatalysisSystem>("../../../SimulationRoot/AutoCatalysisSystem");
         _thermal = BuildMultiMesh(
             GetNode<MultiMeshInstance3D>("SteamShock"),
             VfxMaterials.BuildBillboardMesh(1.3f, "smoke_01", ElementPalette.Reaction(ReactionKind.SteamShock)));
@@ -53,7 +53,7 @@ public partial class ReactionPresentationSystem : Node3D
             VfxMaterials.BuildVerticalBeamMesh(1.0f, 0.3f, "trace_01", ElementPalette.Lightning));
         _elements.ReactionTriggered += OnReactionTriggered;
         _spells.LightningJumped += OnLightningJumped;
-        _catalyze.Catalyzed += OnCatalyzed;
+        _catalyze.Executed += OnCatalyzed;
     }
 
     public override void _Process(double deltaValue)
@@ -102,7 +102,7 @@ public partial class ReactionPresentationSystem : Node3D
         }
         if (IsInstanceValid(_catalyze))
         {
-            _catalyze.Catalyzed -= OnCatalyzed;
+            _catalyze.Executed -= OnCatalyzed;
         }
     }
 
@@ -121,7 +121,7 @@ public partial class ReactionPresentationSystem : Node3D
         });
     }
 
-    private void OnCatalyzed(Vector2 position, float radius)
+    private void OnCatalyzed(Vector2 position, int reactionCount, float damage)
     {
         _pulses.Add(new Pulse
         {

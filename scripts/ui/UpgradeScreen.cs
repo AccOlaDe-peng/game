@@ -55,12 +55,17 @@ public partial class UpgradeScreen : Control
             if (hasChoice)
             {
                 UpgradeChoice choice = choices[index];
-                _choiceButtons[index].Text = $"\n\n{choice.DisplayName}\n\n{choice.Description}";
+                // 常用词 + 世界观副标题：安全重构方案，标注功耗变化。
+                string powerNote = choice.Kind == UpgradeChoiceKind.InstallStandardCard
+                    ? $"\n功耗 {choice.PowerBefore} → {choice.PowerAfter}  ·  安全重构方案"
+                    : "\n安全重构方案";
+                _choiceButtons[index].Text =
+                    $"\n\n{choice.DisplayName}\n\n{choice.Description}{powerNote}";
                 SetChoiceIcon(_choiceButtons[index], choice);
             }
         }
 
-        _rerollButton.Text = $"刷新（剩余 {rerollsRemaining} 次）";
+        _rerollButton.Text = $"重新演算（剩余 {rerollsRemaining} 次）";
         _rerollButton.Disabled = rerollsRemaining <= 0;
         if (choices.Count > 0)
         {

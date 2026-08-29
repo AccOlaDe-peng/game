@@ -2,6 +2,7 @@ using Catalyst.Combat;
 using Catalyst.Core;
 using Catalyst.Elements;
 using Catalyst.Enemies;
+using Catalyst.Passives;
 using Catalyst.Player;
 using Catalyst.Run;
 using Catalyst.Spatial;
@@ -29,7 +30,7 @@ public partial class ElementReactionRunner : Node
             SpatialGrid grid = run.GetNode<SpatialGrid>("SimulationRoot/SpatialGrid");
             CombatSystem combat = run.GetNode<CombatSystem>("SimulationRoot/CombatSystem");
             RunStatistics statistics = run.GetNode<RunStatistics>("SimulationRoot/RunStatistics");
-            CatalyzeAbility catalyze = run.GetNode<CatalyzeAbility>("WorldRoot/Player/CatalyzeAbility");
+            AutoCatalysisSystem catalyze = run.GetNode<AutoCatalysisSystem>("SimulationRoot/AutoCatalysisSystem");
             enemies.ClearAll();
 
             EntityHandle steam = enemies.Spawn(new Vector2(-10, 0));
@@ -64,12 +65,34 @@ public partial class ElementReactionRunner : Node
             EntityHandle catalystTarget = enemies.Spawn(new Vector2(0, 15));
             SetStates(enemies, catalystTarget, water: 1, fire: 1);
             grid.Rebuild();
-            catalyze.ResetCooldown();
-            Require(catalyze.TriggerAt(new Vector2(0, 15)) >= 1,
-                "Catalyze did not select the prepared chemistry target.");
+            catalyze.DebugTriggerAt(new Vector2(0, 15));
             combat.Flush();
             Require(statistics.ReactionsByKind.GetValueOrDefault(ReactionKind.SteamShock) == 2,
-                "Catalyze did not resolve an already prepared Steam Shock.");
+                "Auto catalysis did not resolve an already prepared Steam Shock.");
+
+            // Integration: charge → evaluate → execute → statistics → reset.
+            enemies.ClearAll();
+            for (int index = 0; index < 4; index++)
+            {
+                EntityHandle clustered = enemies.Spawn(new Vector2(1 + index * 1.5f, 6));
+                SetStates(enemies, clustered, water: 2, fire: 2);
+            }
+            grid.Rebuild();
+            int beforeAuto = statistics.ReactionCount;
+            catalyze.DebugForceChargeFull();
+            // One tick evaluates and submits; the flush happens inside CombatSystem.
+            combat._PhysicsProcess(1.0 / 60.0);
+            catalyze._PhysicsProcess(1.0 / 60.0);
+            combat._PhysicsProcess(1.0 / 60.0);
+            catalyze._PhysicsProcess(1.0 / 60.0);
+            Require(statistics.ReactionCount > beforeAuto,
+                "Auto catalysis did not trigger any reaction on clustered targets.");
+            Require(statistics.CatalysisExecutionCount >= 1,
+                "Auto catalysis execution was not recorded.");
+            Require(statistics.CatalysisReactionCount >= 1,
+                "Auto catalysis reaction count was not recorded.");
+            Require(catalyze.Charge < 1.0f,
+                "Auto catalysis did not consume charge after execution.");
 
             CatalystLog.Info("Tests", "ELEMENT_REACTIONS_OK");
             GetTree().Quit(0);

@@ -1,22 +1,41 @@
+using Catalyst.App;
 using Catalyst.Elements;
 using Catalyst.Weapons;
 using Catalyst.Cards;
 
 namespace Catalyst.Spells;
 
-public sealed class SpellRuntime
+public sealed class SpellRuntime : IWeaponBuildView
 {
     public SpellDefinition Definition { get; }
     public int Level { get; private set; } = 1;
     public SpellBranch SelectedBranch { get; private set; }
     public float CooldownRemaining { get; set; }
     public SpellStats Stats { get; private set; }
+
+    string IWeaponBuildView.WeaponDefinitionId => Definition.Id.ToString();
+    int IWeaponBuildView.WeaponLevel => Level;
+    int IWeaponBuildView.CurrentPower => CurrentPower;
+    int IWeaponBuildView.PowerCapacity => PowerCapacity;
     public IReadOnlyDictionary<string, int> InstalledCards => _installedCards;
     public IReadOnlyDictionary<string, int> InstalledStandardCards => _installedStandardCards;
+    /// <summary>Payload card id discounted by a character passive this run, if any.</summary>
+    public string? DiscountedCardId { get; set; }
     public int PowerCapacity => 12;
-    public int CurrentPower =>
-        _installedCards.Sum(pair => WeaponCardCatalog.Get(pair.Key).PowerCost * pair.Value) +
-        _installedStandardCards.Sum(pair => StandardCardCatalog.Get(pair.Key).PowerCost * pair.Value);
+    public int CurrentPower
+    {
+        get
+        {
+            int power =
+                _installedCards.Sum(pair => WeaponCardCatalog.Get(pair.Key).PowerCost * pair.Value) +
+                _installedStandardCards.Sum(pair => StandardCardCatalog.Get(pair.Key).PowerCost * pair.Value);
+            if (DiscountedCardId is not null)
+            {
+                power -= Math.Min(1, StandardCardCatalog.Get(DiscountedCardId).PowerCost);
+            }
+            return Math.Max(0, power);
+        }
+    }
 
     private readonly Dictionary<string, int> _installedCards = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> _installedStandardCards = new(StringComparer.Ordinal);
@@ -77,8 +96,15 @@ public sealed class SpellRuntime
     public bool CanInstallStandardCard(StandardCardDefinition card)
     {
         if (!card.IsCompatible(Definition.CastKind) ||
-            _installedStandardCards.GetValueOrDefault(card.Id) >= card.MaximumLevel ||
-            CurrentPower + card.PowerCost > PowerCapacity)
+            _installedStandardCards.GetValueOrDefault(card.Id) >= card.MaximumLevel)
+        {
+            return false;
+        }
+        int projectedPower = CurrentPower + card.PowerCost;
+        // The payload-adapter discount applies on install, so it legitimately
+        // unlocks a card that only fits after the discount.
+        bool discountApplies = DiscountedCardId is null && card.Category == StandardCardCategory.Payload;
+        if (projectedPower > PowerCapacity && !(discountApplies && projectedPower - 1 <= PowerCapacity))
         {
             return false;
         }

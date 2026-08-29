@@ -43,7 +43,7 @@ public static class StandardCardCatalog
         Card("card.trigger.on_pierce", "穿透时", "穿透后执行已接线动作", StandardCardCategory.Trigger, StandardCardEffect.OnPierce, 1, 1, ProjectileWeapons),
         Card("card.trigger.on_bounce", "弹射时", "弹射后执行已接线动作", StandardCardCategory.Trigger, StandardCardEffect.OnBounce, 1, 1, ProjectileWeapons),
         Card("card.trigger.on_freeze", "冻结时", "冻结目标时执行已接线动作", StandardCardCategory.Trigger, StandardCardEffect.OnFreeze, 1, 1),
-        Card("card.trigger.on_dash", "冲刺时", "冲刺结束后执行已接线动作", StandardCardCategory.Trigger, StandardCardEffect.OnDash, 1, 1, new[] { SpellCastKind.ElementMine }),
+        Card("card.trigger.on_dash", "施放时", "施放武器时有 10% 概率执行已接线动作", StandardCardCategory.Trigger, StandardCardEffect.OnDash, 1, 1, new[] { SpellCastKind.ElementMine }),
 
         Card("card.reaction.shatter", "碎冰", "冻结目标受击时改写为碎片动作", StandardCardCategory.Reaction, StandardCardEffect.Shatter, 3, 1),
         Card("card.reaction.burn_propagation", "燃爆传播", "燃烧目标死亡时改写为传播动作", StandardCardCategory.Reaction, StandardCardEffect.BurnPropagation, 3, 1),

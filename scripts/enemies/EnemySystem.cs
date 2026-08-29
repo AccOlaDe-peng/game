@@ -115,7 +115,10 @@ public partial class EnemySystem : Node
 
     public EntityHandle Spawn(Vector2 position) => Spawn(position, DefaultDefinition);
 
-    public EntityHandle Spawn(Vector2 position, EnemyDefinition? definition)
+    public EntityHandle Spawn(Vector2 position, EnemyDefinition? definition) =>
+        Spawn(position, definition, 1.0f);
+
+    public EntityHandle Spawn(Vector2 position, EnemyDefinition? definition, float healthMultiplier)
     {
         if (_freeSlots.Count == 0 || definition is null)
         {
@@ -128,6 +131,7 @@ public partial class EnemySystem : Node
         EntityHandle handle = new(slot, _generations[slot]);
         _slotToDense[slot] = denseIndex;
         _denseToSlot[denseIndex] = slot;
+        float maxHealth = definition.MaxHealth * Math.Max(0.1f, healthMultiplier);
         _states[denseIndex] = new EnemyState
         {
             Handle = handle,
@@ -135,8 +139,8 @@ public partial class EnemySystem : Node
             Behavior = EnemyBehaviorState.Chasing,
             IsElite = definition.IsElite,
             Position = position,
-            Health = definition.MaxHealth,
-            MaxHealth = definition.MaxHealth,
+            Health = maxHealth,
+            MaxHealth = maxHealth,
             MoveSpeed = definition.MoveSpeed,
             Radius = definition.Radius,
             ExperienceValue = definition.ExperienceValue,
@@ -388,7 +392,9 @@ public partial class EnemySystem : Node
             if (distance <= 2.6f)
             {
                 enemy.Behavior = EnemyBehaviorState.Telegraphing;
-                enemy.BehaviorTimer = 0.9f;
+                // Longer fuse so walking out of the blast stays possible
+                // without any dash ability.
+                enemy.BehaviorTimer = 1.2f;
                 EnemyAttackTelegraphed?.Invoke(enemy.Position, 3.8f, enemy.Archetype);
             }
         }
@@ -432,7 +438,7 @@ public partial class EnemySystem : Node
         }
         else if (enemy.Behavior == EnemyBehaviorState.Charging)
         {
-            enemy.Velocity = enemy.LockedDirection * 13.0f * movementMultiplier;
+            enemy.Velocity = enemy.LockedDirection * 11.0f * movementMultiplier;
             if (enemy.BehaviorTimer <= 0.0f)
             {
                 enemy.Behavior = EnemyBehaviorState.Recovering;
@@ -445,7 +451,9 @@ public partial class EnemySystem : Node
             if (enemy.AttackRemaining <= 0.0f && distance is > 4.0f and < 16.0f)
             {
                 enemy.Behavior = EnemyBehaviorState.Telegraphing;
-                enemy.BehaviorTimer = 0.75f;
+                // Extended telegraph: a walking player can leave the charge
+                // cone without any dash ability.
+                enemy.BehaviorTimer = 1.1f;
                 enemy.LockedDirection = direction;
                 EnemyAttackTelegraphed?.Invoke(enemy.Position, 7.0f, enemy.Archetype);
             }

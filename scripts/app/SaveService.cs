@@ -1,5 +1,6 @@
 using Catalyst.Core;
 using Catalyst.Meta;
+using Catalyst.Passives;
 using Godot;
 
 namespace Catalyst.App;
@@ -18,16 +19,56 @@ public partial class SaveService : Node
     public override void _Ready()
     {
         Profile = AtomicJsonStore.LoadOrDefault(ProfilePath, static () => new ProfileData());
-        if (Profile.SchemaVersion < 3)
+        if (Profile.SchemaVersion < 4)
         {
-            Profile.SchemaVersion = 3;
+            MigrateToV4(Profile);
             NormalizeProfile();
             AtomicJsonStore.Save(ProfilePath, Profile);
-            CatalystLog.Info("Save", "Profile migrated to schema version 3.");
+            CatalystLog.Info("Save", $"Profile migrated to schema version {Profile.SchemaVersion}.");
         }
         NormalizeProfile();
         ActiveCharacter = CharacterCatalog.Get(Profile.SelectedCharacterId);
         CatalystLog.Info("Save", "Profile service ready.");
+    }
+
+    /// <summary>Pure V3 → V4 migration: never invents card ids, never drops progress.</summary>
+    public static void MigrateToV4(ProfileData profile)
+    {
+        if (profile.SchemaVersion >= 4)
+        {
+            return;
+        }
+
+        foreach ((string characterId, int runs) in profile.CharacterMastery)
+        {
+            CharacterProgressData progress = GetOrCreateProgress(profile, characterId);
+            progress.CompletedRuns = Math.Max(progress.CompletedRuns, runs);
+        }
+
+        if (profile.TutorialSeen)
+        {
+            profile.SeenTutorialIds.Add("tutorial.movement");
+            profile.SeenTutorialIds.Add("tutorial.upgrade");
+        }
+
+        profile.UnlockedPassiveIds.AddRange(
+            PassiveCatalog.CorePassives.Select(passive => passive.Id.ToString())
+                .Where(id => !profile.UnlockedPassiveIds.Contains(id)));
+
+        // Old FinalBuild strings cannot be parsed reliably; they are dropped
+        // without guessing card ids. LastRun itself is preserved.
+        profile.SchemaVersion = 4;
+    }
+
+    public static CharacterProgressData GetOrCreateProgress(ProfileData profile, string characterId)
+    {
+        profile.CharacterProgress ??= new Dictionary<string, CharacterProgressData>();
+        if (!profile.CharacterProgress.TryGetValue(characterId, out CharacterProgressData? progress))
+        {
+            progress = new CharacterProgressData();
+            profile.CharacterProgress[characterId] = progress;
+        }
+        return progress;
     }
 
     public bool IsCharacterUnlocked(string characterId) =>
@@ -45,6 +86,13 @@ public partial class SaveService : Node
         return true;
     }
 
+    /// <summary>
+    /// Test/tool hook: switch the active character without persisting the
+    /// selection, so scene runners stay independent of the player's profile.
+    /// </summary>
+    public void PreviewCharacter(string characterId) =>
+        ActiveCharacter = CharacterCatalog.Get(characterId);
+
     public void RecordRun(RunSummary summary)
     {
         Profile.LastRun = summary;
@@ -53,8 +101,14 @@ public partial class SaveService : Node
         Profile.BossDefeated |= summary.BossDefeated;
         Profile.CompletedRuns++;
         Profile.MemoryShards += CalculateMemoryShards(summary);
-        Profile.CharacterMastery[summary.CharacterId] =
-            Profile.CharacterMastery.GetValueOrDefault(summary.CharacterId) + 1;
+
+        CharacterProgressData progress = GetOrCreateProgress(Profile, summary.CharacterId);
+        progress.CompletedRuns++;
+        if (summary.Victory) progress.Victories++;
+        if (summary.BossDefeated) progress.BossKills++;
+        progress.MasteryExperience += 10 + summary.KillCount / 10;
+        progress.HighestDifficulty = Math.Max(progress.HighestDifficulty, summary.Difficulty);
+
         if (Profile.CompletedRuns >= 1)
         {
             Unlock(CharacterCatalog.EchoHunterId, CharacterCatalog.RicochetDiscId);
@@ -71,6 +125,13 @@ public partial class SaveService : Node
     {
         Profile.UnlockedCharacterIds ??= new List<string>();
         Profile.UnlockedWeaponIds ??= new List<string>();
+        Profile.UnlockedPassiveIds ??= new List<string>();
+        Profile.SeenTutorialIds ??= new List<string>();
+        Profile.DiscoveredReactionIds ??= new List<string>();
+        Profile.DiscoveredFusionIds ??= new List<string>();
+        Profile.UnlockedRecordIds ??= new List<string>();
+        Profile.ViewedRecordIds ??= new List<string>();
+        Profile.CharacterProgress ??= new Dictionary<string, CharacterProgressData>();
         Profile.CharacterMastery ??= new Dictionary<string, int>();
         if (!Profile.UnlockedCharacterIds.Contains(CharacterCatalog.ElementalistId))
             Profile.UnlockedCharacterIds.Add(CharacterCatalog.ElementalistId);

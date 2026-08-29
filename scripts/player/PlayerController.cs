@@ -5,23 +5,9 @@ namespace Catalyst.Player;
 
 public partial class PlayerController : CharacterBody3D
 {
-    public event Action? Dodged;
-
     [Export]
     public float MoveSpeed { get; set; } = 6.0f;
 
-    [Export]
-    public float DodgeSpeed { get; set; } = 15.0f;
-
-    [Export]
-    public float DodgeDuration { get; set; } = 0.16f;
-
-    [Export]
-    public float DodgeCooldown { get; set; } = 0.9f;
-
-    private float _dodgeRemaining;
-    private float _dodgeCooldownRemaining;
-    private Vector3 _dodgeDirection = Vector3.Forward;
     private Node3D? _visualRoot;
     private AnimationPlayer? _animationPlayer;
     private StringName _idleAnimation = new();
@@ -44,8 +30,6 @@ public partial class PlayerController : CharacterBody3D
     public override void _PhysicsProcess(double deltaValue)
     {
         float delta = (float)deltaValue;
-        _dodgeRemaining = Math.Max(0.0f, _dodgeRemaining - delta);
-        _dodgeCooldownRemaining = Math.Max(0.0f, _dodgeCooldownRemaining - delta);
 
         Vector2 input = Input.GetVector(
             InputBootstrap.MoveLeft,
@@ -59,22 +43,7 @@ public partial class PlayerController : CharacterBody3D
             moveDirection = moveDirection.Normalized();
         }
 
-        if (Input.IsActionJustPressed(InputBootstrap.Dodge) &&
-            _dodgeCooldownRemaining <= 0.0f)
-        {
-            if (moveDirection.LengthSquared() > 0.01f)
-            {
-                _dodgeDirection = moveDirection.Normalized();
-            }
-
-            _dodgeRemaining = DodgeDuration;
-            _dodgeCooldownRemaining = DodgeCooldown;
-            Dodged?.Invoke();
-        }
-
-        Vector3 desiredVelocity = _dodgeRemaining > 0.0f
-            ? _dodgeDirection * DodgeSpeed
-            : moveDirection * MoveSpeed;
+        Vector3 desiredVelocity = moveDirection * MoveSpeed;
 
         if (_visualRoot is not null)
         {

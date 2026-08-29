@@ -12,6 +12,7 @@ public struct ProjectileState
     public Vector2 Velocity;
     public float Radius;
     public float RemainingLife;
+    public float InitialLife;
     public float Damage;
     public StringName SourceSpellId;
     public ElementType Element;
@@ -28,6 +29,7 @@ public struct ProjectileState
     public Vector2 Origin;
     public bool HasSplit;
     public bool IsReturning;
+    public bool HasAutoRecalled;
     public int ChainDepth;
     public int ChildEventsRemaining;
     public EntityHandle Hit0;

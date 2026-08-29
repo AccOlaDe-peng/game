@@ -8,11 +8,24 @@ namespace Catalyst.Waves;
 
 public partial class WaveDirector : Node
 {
+    public event Action<string>? EliteAnnounced;
+
     [Export(PropertyHint.Range, "0,1000,1")]
     public int EnemyLimit { get; set; } = 500;
 
     [Export] public float SpawnRadius { get; set; } = 28.0f;
     [Export] public float RunDuration { get; set; } = 720.0f;
+
+    // Continuous difficulty curve (no hard phase steps):
+    // spawn interval decays smoothly, batch size grows every 3 minutes and
+    // enemy health scales mildly so late kills stay meaningful.
+    [Export] public float InitialSpawnInterval { get; set; } = 1.0f;
+    [Export] public float MinimumSpawnInterval { get; set; } = 0.18f;
+    [Export] public float IntervalDecayPerMinute { get; set; } = 0.9f;
+    [Export] public float FirstEliteAtSeconds { get; set; } = 240.0f;
+    [Export] public float EliteRespawnIntervalSeconds { get; set; } = 75.0f;
+    [Export] public float EliteAnnounceLeadSeconds { get; set; } = 5.0f;
+    [Export] public float HealthScalePerMinute { get; set; } = 0.05f;
 
     private readonly List<EnemyDefinition> _enemyDefinitions = new();
     private readonly List<WaveDefinition> _phases = new();
@@ -21,7 +34,9 @@ public partial class WaveDirector : Node
     private RunController _run = null!;
     private CharacterBody3D _player = null!;
     private float _spawnRemaining;
-    private double _nextEliteAt = 180.0;
+    private double _nextEliteAt;
+    private double _eliteAnnounceRemaining = -1.0;
+    private bool _eliteAnnounced;
     private float _eventPressure = 1.0f;
 
     public float EventPressure => _eventPressure;
@@ -31,6 +46,7 @@ public partial class WaveDirector : Node
         _enemies = GetNode<EnemySystem>("../EntitySystem");
         _run = GetNode<RunController>("../RunController");
         _player = GetNode<CharacterBody3D>("../../WorldRoot/Player");
+        _nextEliteAt = FirstEliteAtSeconds;
         LoadDefinitions();
     }
 
@@ -44,6 +60,7 @@ public partial class WaveDirector : Node
         {
             return;
         }
+        UpdateEliteAnnouncement(deltaValue);
         if (EnemyLimit <= 0 || _enemies.ActiveCount >= EnemyLimit)
         {
             return;
@@ -55,27 +72,61 @@ public partial class WaveDirector : Node
             return;
         }
 
-        WaveDefinition phase = GetCurrentPhase();
-        int batchSize = Math.Max(1, Mathf.RoundToInt(phase.BatchSize * _eventPressure));
+        int batchSize = CurrentBatchSize();
         for (int index = 0; index < batchSize && _enemies.ActiveCount < EnemyLimit; index++)
         {
+            bool eliteDue = _run.ElapsedSeconds >= _nextEliteAt;
             EnemyDefinition? definition = SelectDefinition(
-                allowElite: _run.ElapsedSeconds >= _nextEliteAt && index == 0);
+                allowElite: eliteDue && index == 0);
             if (definition is null)
             {
                 break;
             }
-            _enemies.Spawn(GetSpawnPosition(), definition);
+            _enemies.Spawn(GetSpawnPosition(), definition, CurrentHealthMultiplier());
             if (definition.IsElite)
             {
-                _nextEliteAt = _run.ElapsedSeconds + 75.0;
+                _nextEliteAt = _run.ElapsedSeconds + EliteRespawnIntervalSeconds;
+                _eliteAnnounced = false;
                 CatalystLog.Info("Waves", $"Elite spawned: {definition.DisplayName}.");
             }
         }
 
         _spawnRemaining = Math.Max(
-            0.06f,
-            phase.SpawnInterval / (phase.ThreatMultiplier * _eventPressure));
+            MinimumSpawnInterval,
+            CurrentSpawnInterval() / Mathf.Max(1.0f, _eventPressure));
+    }
+
+    /// <summary>Smooth spawn interval: 1.0s decaying 10% per minute, floor 0.18s.</summary>
+    public float CurrentSpawnInterval()
+    {
+        float decay = Mathf.Pow(IntervalDecayPerMinute, (float)(_run.ElapsedSeconds / 60.0));
+        return Math.Max(MinimumSpawnInterval, InitialSpawnInterval * decay);
+    }
+
+    /// <summary>Batch size grows by 1 every 180 s, capped at 4.</summary>
+    public int CurrentBatchSize() =>
+        Math.Min(4, 1 + (int)(_run.ElapsedSeconds / 180.0));
+
+    /// <summary>Mild late-game health scaling: +5% per minute.</summary>
+    public float CurrentHealthMultiplier() =>
+        1.0f + (float)(_run.ElapsedSeconds / 60.0) * HealthScalePerMinute;
+
+    private void UpdateEliteAnnouncement(double delta)
+    {
+        if (_eliteAnnounced && _eliteAnnounceRemaining <= 0.0)
+        {
+            return;
+        }
+        double secondsUntilElite = _nextEliteAt - _run.ElapsedSeconds;
+        if (!_eliteAnnounced && secondsUntilElite <= EliteAnnounceLeadSeconds &&
+            secondsUntilElite > 0.0 && _nextEliteAt < RunDuration)
+        {
+            _eliteAnnounced = true;
+            _eliteAnnounceRemaining = EliteAnnounceLeadSeconds;
+            EliteAnnounced?.Invoke("警告：灾变核心前兆正在接近");
+            CatalystLog.Info("Waves", "Elite spawn announced.");
+        }
+        _eliteAnnounceRemaining = Math.Max(-1.0, _eliteAnnounceRemaining - delta);
     }
 
     public void SetEventPressure(float multiplier)

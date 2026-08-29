@@ -19,6 +19,11 @@ public partial class PlayerHealth : Node
     [Export]
     public float ContactRadius { get; set; } = 1.05f;
 
+    /// <summary>Brief invulnerability after any hit so overlapping enemies and
+    /// projectiles cannot stack lethal damage in the same instant.</summary>
+    [Export]
+    public float InvulnerabilitySeconds { get; set; } = 0.35f;
+
     public event Action<float, float>? HealthChanged;
 
     private CharacterBody3D _player = null!;
@@ -27,6 +32,7 @@ public partial class PlayerHealth : Node
     private EnemySystem _enemies = null!;
     private RunStatistics _statistics = null!;
     private float _contactRemaining;
+    private float _invulnerabilityRemaining;
 
     public float CurrentHealth { get; private set; }
 
@@ -48,6 +54,7 @@ public partial class PlayerHealth : Node
         }
 
         _contactRemaining = Math.Max(0.0f, _contactRemaining - (float)deltaValue);
+        _invulnerabilityRemaining = Math.Max(0.0f, _invulnerabilityRemaining - (float)deltaValue);
         if (_contactRemaining > 0.0f)
         {
             return;
@@ -66,19 +73,32 @@ public partial class PlayerHealth : Node
 
     public void ApplyDamage(float amount, string cause = "敌人攻击")
     {
-        if (amount <= 0.0f || CurrentHealth <= 0.0f)
+        if (amount <= 0.0f || CurrentHealth <= 0.0f ||
+            (_invulnerabilityRemaining > 0.0f && _run.State == RunState.Playing))
         {
             return;
         }
 
         float resolvedDamage = Math.Min(CurrentHealth, amount);
         CurrentHealth = Math.Max(0.0f, CurrentHealth - amount);
+        _invulnerabilityRemaining = InvulnerabilitySeconds;
         _statistics.RecordDamageTaken(resolvedDamage, cause);
         HealthChanged?.Invoke(CurrentHealth, MaxHealth);
         if (CurrentHealth <= 0.0f)
         {
             _run.EnterDefeat();
         }
+    }
+
+    /// <summary>Restores a fraction of maximum health (level-up reward).</summary>
+    public void RestoreFraction(float fraction)
+    {
+        if (fraction <= 0.0f || CurrentHealth <= 0.0f || CurrentHealth >= MaxHealth)
+        {
+            return;
+        }
+        CurrentHealth = Math.Min(MaxHealth, CurrentHealth + MaxHealth * fraction);
+        HealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
     public void IncreaseMaximumHealth(float multiplier)

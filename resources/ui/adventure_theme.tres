@@ -1,59 +1,156 @@
-[gd_resource type="Theme" load_steps=10 format=3]
+[gd_resource type="Theme" load_steps=12 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/art/ui/button_brown.png" id="1_button"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/button_red.png" id="2_button_red"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/progress_transparent.png" id="3_progress_bg"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/progress_blue.png" id="4_progress"]
+[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
+bg_color = Color(0.055, 0.086, 0.115, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.19, 0.31, 0.38, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxTexture" id="StyleButton"]
-texture = ExtResource("1_button")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 8.0
-content_margin_left = 14.0
-content_margin_top = 8.0
-content_margin_right = 14.0
-content_margin_bottom = 8.0
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.07, 0.16, 0.195, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.32, 0.88, 0.94, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+shadow_color = Color(0.1, 0.8, 0.9, 0.15)
+shadow_size = 5
 
-[sub_resource type="StyleBoxTexture" id="StyleButtonHover"]
-texture = ExtResource("1_button")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 8.0
-modulate_color = Color(1.18, 1.12, 0.92, 1)
+[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
+bg_color = Color(0.1, 0.34, 0.39, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.98, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 9.0
 
-[sub_resource type="StyleBoxTexture" id="StyleButtonPressed"]
-texture = ExtResource("2_button_red")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 8.0
-modulate_color = Color(0.82, 0.82, 0.82, 1)
+[sub_resource type="StyleBoxFlat" id="ButtonDisabled"]
+bg_color = Color(0.04, 0.052, 0.065, 0.72)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.13, 0.16, 0.18, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxTexture" id="StyleProgressBackground"]
-texture = ExtResource("3_progress_bg")
-texture_margin_left = 7.0
-texture_margin_top = 10.0
-texture_margin_right = 7.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="ProgressBackground"]
+bg_color = Color(0.018, 0.031, 0.043, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.13, 0.22, 0.27, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxTexture" id="StyleProgressFill"]
-texture = ExtResource("4_progress")
-texture_margin_left = 7.0
-texture_margin_top = 10.0
-texture_margin_right = 7.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="ProgressFill"]
+bg_color = Color(0.28, 0.82, 0.9, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="SliderTrack"]
+bg_color = Color(0.055, 0.09, 0.115, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="SliderFill"]
+bg_color = Color(0.25, 0.78, 0.86, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="SliderGrabber"]
+bg_color = Color(0.76, 0.98, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.65, 0.72, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 7.0
+content_margin_top = 7.0
+content_margin_right = 7.0
+content_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxFlat" id="Separator"]
+bg_color = Color(0.16, 0.28, 0.33, 0.75)
+content_margin_top = 1.0
+content_margin_bottom = 1.0
 
 [resource]
-Button/colors/font_color = Color(0.15, 0.09, 0.035, 1)
-Button/colors/font_hover_color = Color(0.08, 0.045, 0.015, 1)
-Button/colors/font_pressed_color = Color(1, 0.93, 0.72, 1)
-Button/font_sizes/font_size = 17
-Button/styles/normal = SubResource("StyleButton")
-Button/styles/hover = SubResource("StyleButtonHover")
-Button/styles/pressed = SubResource("StyleButtonPressed")
-Button/styles/focus = SubResource("StyleButtonHover")
-ProgressBar/styles/background = SubResource("StyleProgressBackground")
-ProgressBar/styles/fill = SubResource("StyleProgressFill")
+default_font_size = 16
+Label/colors/font_color = Color(0.84, 0.9, 0.93, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0.5)
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 2
+Button/colors/font_color = Color(0.8, 0.89, 0.92, 1)
+Button/colors/font_hover_color = Color(0.85, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.34, 0.39, 0.42, 1)
+Button/font_sizes/font_size = 16
+Button/styles/normal = SubResource("ButtonNormal")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/pressed = SubResource("ButtonPressed")
+Button/styles/focus = SubResource("ButtonHover")
+Button/styles/disabled = SubResource("ButtonDisabled")
+OptionButton/colors/font_color = Color(0.8, 0.89, 0.92, 1)
+OptionButton/styles/normal = SubResource("ButtonNormal")
+OptionButton/styles/hover = SubResource("ButtonHover")
+OptionButton/styles/pressed = SubResource("ButtonPressed")
+OptionButton/styles/focus = SubResource("ButtonHover")
+CheckButton/colors/font_color = Color(0.75, 0.83, 0.87, 1)
+CheckButton/colors/font_hover_color = Color(0.85, 1, 1, 1)
+ProgressBar/styles/background = SubResource("ProgressBackground")
+ProgressBar/styles/fill = SubResource("ProgressFill")
+HSlider/styles/slider = SubResource("SliderTrack")
+HSlider/styles/grabber_area = SubResource("SliderFill")
+HSlider/styles/grabber_area_highlight = SubResource("SliderFill")
+HSeparator/styles/separator = SubResource("Separator")
+VSeparator/styles/separator = SubResource("Separator")

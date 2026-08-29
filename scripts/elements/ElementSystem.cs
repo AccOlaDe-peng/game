@@ -8,12 +8,20 @@ using Godot;
 
 namespace Catalyst.Elements;
 
+/// <summary>Read-only catalysis preview. Never mutates the evaluated state.</summary>
+public readonly record struct ReactionPreview(
+    bool CanReact,
+    ReactionKind Reaction,
+    int ConsumedStacks,
+    float ExpectedDamage);
+
 public partial class ElementSystem : Node
 {
     public event Action<ReactionKind, Vector2, float>? ReactionTriggered;
     public event Action<EntityHandle, ReactionKind, float>? ReactionResolved;
     public event Action<EntityHandle, DamageContext>? Frozen;
     public event Action<FusionIdentity, Vector2>? ChemistryReactionTriggered;
+    public event Action<EntityHandle, ElementType>? ElementApplied;
 
     private readonly List<EntityHandle> _candidates = new(64);
     private EnemySystem _enemies = null!;
@@ -119,7 +127,42 @@ public partial class ElementSystem : Node
         {
             Frozen?.Invoke(context.Target, context);
         }
+        if (ShouldApply(context.Element, context.Fusion))
+        {
+            ElementApplied?.Invoke(context.Target, context.Element);
+        }
+        if (context.SecondaryElement != ElementType.None &&
+            ShouldApply(context.SecondaryElement, context.Fusion))
+        {
+            ElementApplied?.Invoke(context.Target, context.SecondaryElement);
+        }
         _enemies.SetElementRuntime(context.Target, runtime);
+    }
+
+    /// <summary>
+    /// Read-only preview of the catalysis result for one element state. The
+    /// estimate mirrors <see cref="ForceReaction"/> resolution order and never
+    /// mutates <paramref name="state"/>.
+    /// </summary>
+    public static ReactionPreview TryPreviewCatalysis(in ElementRuntimeState state)
+    {
+        int water = state.Water.Stacks;
+        int fire = state.Fire.Stacks;
+        int lightning = state.Lightning.Stacks;
+        if (water > 0 && fire > 0)
+        {
+            int consumed = Math.Min(water, fire);
+            return new ReactionPreview(true, ReactionKind.SteamShock, consumed,
+                2.0f + 0.65f * consumed);
+        }
+        if (water > 0 && lightning > 0)
+        {
+            // Conduction damages every wet target in range; the estimate covers
+            // the initiating target only and stays deterministic.
+            return new ReactionPreview(true, ReactionKind.Conduction,
+                Math.Min(water, lightning), 2.35f);
+        }
+        return default;
     }
 
     private bool ShouldApply(ElementType element, FusionIdentity fusion)

@@ -23,4 +23,6 @@ public sealed record UpgradeChoice(
     SpellCastKind Spell = SpellCastKind.ArcaneMissile,
     SpellBranch Branch = SpellBranch.None,
     WeaponCardDefinition? WeaponCard = null,
-    StandardCardDefinition? StandardCard = null);
+    StandardCardDefinition? StandardCard = null,
+    int PowerBefore = 0,
+    int PowerAfter = 0);

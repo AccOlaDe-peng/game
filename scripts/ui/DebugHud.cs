@@ -1,5 +1,6 @@
 using Catalyst.Run;
 using Catalyst.Enemies;
+using Catalyst.Passives;
 using Catalyst.Pickups;
 using Catalyst.Projectiles;
 using Godot;
@@ -14,7 +15,15 @@ public partial class DebugHud : Control
     private ProjectileSystem? _projectiles;
     private PickupSystem? _pickups;
     private RunStatistics? _statistics;
+    private PassiveSystem? _passives;
+    private AutoCatalysisSystem? _catalysis;
     private double _refreshRemaining;
+
+    public void BindPassives(PassiveSystem passives, AutoCatalysisSystem catalysis)
+    {
+        _passives = passives;
+        _catalysis = catalysis;
+    }
 
     public override void _Ready()
     {
@@ -39,7 +48,13 @@ public partial class DebugHud : Control
             $"Pickups {_pickups?.ActiveCount ?? 0}\n" +
             $"Kills {_statistics?.KillCount ?? 0}\n" +
             $"Reactions {_statistics?.ReactionCount ?? 0}\n" +
-            $"Seed {_controller.RunSeed}";
+            $"Seed {_controller.RunSeed}\n" +
+            $"Passive events/frame {_passives?.EventsDispatchedThisFrame ?? 0}\n" +
+            $"Dropped passive events {_passives?.DroppedEventCount ?? 0}\n" +
+            $"Active passives {_passives?.ActivePassiveCount ?? 0}\n" +
+            $"Catalysis state {_catalysis?.State}\n" +
+            $"Catalysis charge {_catalysis?.Charge:0.00}\n" +
+            $"Catalysis best score {_catalysis?.BestScore:0.0} / targets {_catalysis?.BestReactiveTargetCount ?? 0}";
     }
 
     public override void _Input(InputEvent @event)

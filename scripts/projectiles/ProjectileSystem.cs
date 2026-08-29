@@ -22,10 +22,44 @@ public partial class ProjectileSystem : Node
     private SpatialGrid _grid = null!;
     private RunController _run = null!;
     private CombatSystem _combat = null!;
+    private CharacterBody3D _player = null!;
     private MultiMeshInstance3D _view = null!;
     private MultiMesh _multiMesh = null!;
 
+    private static readonly StringName RicochetDiscId = new("weapon.ricochet_disc");
+
     public int ActiveCount { get; private set; }
+
+    /// <summary>Rift engineer capacity safety: trigger the oldest deployment when full.</summary>
+    public bool CapacitySafetyEnabled { get; set; }
+
+    /// <summary>Echo hunter mark priority: bounce/homing prefers marked targets.</summary>
+    public bool PreferMarkedTargets { get; set; }
+
+    /// <summary>Echo hunter auto recall: discs return once per projectile.</summary>
+    public bool AutoRecallEnabled { get; set; }
+
+    [Export] public int DeploymentLimit { get; set; } = 6;
+    [Export] public float AutoRecallTurnRateRadiansPerSecond { get; set; } = 7.0f;
+
+    public float NextMineDamageMultiplier { get; set; } = 1.0f;
+    public float NextMineRadiusMultiplier { get; set; } = 1.0f;
+
+    public int ActiveMineCount
+    {
+        get
+        {
+            int count = 0;
+            for (int index = 0; index < ActiveCount; index++)
+            {
+                if (_projectiles[index].DetonateOnExpire)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
 
     public override void _Ready()
     {
@@ -33,6 +67,7 @@ public partial class ProjectileSystem : Node
         _grid = GetNode<SpatialGrid>("../SpatialGrid");
         _run = GetNode<RunController>("../RunController");
         _combat = GetNode<CombatSystem>("../CombatSystem");
+        _player = GetNode<CharacterBody3D>("../../WorldRoot/Player");
         _view = GetNode<MultiMeshInstance3D>("../../WorldRoot/ProjectilePresentation/ArcaneMultiMesh");
         _projectiles = new ProjectileState[Capacity];
         BuildPresentation();
@@ -51,6 +86,7 @@ public partial class ProjectileSystem : Node
         {
             ref ProjectileState projectile = ref _projectiles[index];
             ApplyHoming(ref projectile, delta);
+            ApplyAutoRecall(ref projectile, delta);
             projectile.PreviousPosition = projectile.Position;
             projectile.Position += projectile.Velocity * delta;
             projectile.RemainingLife -= delta;
@@ -110,6 +146,7 @@ public partial class ProjectileSystem : Node
             Velocity = direction * speed,
             Radius = 0.22f,
             RemainingLife = lifetime,
+            InitialLife = lifetime,
             Damage = damage,
             SourceSpellId = sourceSpellId,
             Element = element,
@@ -150,10 +187,86 @@ public partial class ProjectileSystem : Node
         int elementStacks,
         ProjectileModules modules = ProjectileModules.None,
         ElementType secondaryElement = ElementType.None,
-        FusionIdentity fusion = FusionIdentity.None) =>
-        Spawn(position, Vector2.Right, damage, 0.0f, fuseSeconds, sourceSpellId,
-            element, elementStacks, 1, explosionRadius, 0, 0.0f, true, modules,
+        FusionIdentity fusion = FusionIdentity.None)
+    {
+        float damageMultiplier = NextMineDamageMultiplier;
+        float radiusMultiplier = NextMineRadiusMultiplier;
+        NextMineDamageMultiplier = 1.0f;
+        NextMineRadiusMultiplier = 1.0f;
+        return Spawn(position, Vector2.Right, damage * damageMultiplier, 0.0f, fuseSeconds, sourceSpellId,
+            element, elementStacks, 1, explosionRadius * radiusMultiplier, 0, 0.0f, true, modules,
             secondaryElement: secondaryElement, fusion: fusion);
+    }
+
+    /// <summary>
+    /// Capacity gate for new deployments. With capacity safety enabled the
+    /// oldest deployment is triggered first; without it creation is refused.
+    /// </summary>
+    public bool EnsureDeploymentCapacity()
+    {
+        if (ActiveMineCount < DeploymentLimit)
+        {
+            return true;
+        }
+        return CapacitySafetyEnabled && TriggerOldestMine();
+    }
+
+    public bool TriggerOldestMine()
+    {
+        for (int index = 0; index < ActiveCount; index++)
+        {
+            if (_projectiles[index].DetonateOnExpire)
+            {
+                return DetonateAt(index);
+            }
+        }
+        return false;
+    }
+
+    public bool TriggerNearestMine(Vector2 position)
+    {
+        int bestIndex = -1;
+        float bestDistance = float.MaxValue;
+        for (int index = 0; index < ActiveCount; index++)
+        {
+            ref ProjectileState mine = ref _projectiles[index];
+            if (!mine.DetonateOnExpire)
+            {
+                continue;
+            }
+            float distance = mine.Position.DistanceSquaredTo(position);
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                bestIndex = index;
+            }
+        }
+        return bestIndex >= 0 && DetonateAt(bestIndex);
+    }
+
+    /// <summary>Number of deployments whose blast radius reaches the position.</summary>
+    public int CountMinesCovering(Vector2 position, float reach)
+    {
+        int count = 0;
+        for (int index = 0; index < ActiveCount; index++)
+        {
+            ref ProjectileState mine = ref _projectiles[index];
+            if (mine.DetonateOnExpire &&
+                mine.Position.DistanceTo(position) <= Math.Max(reach, mine.ExplosionRadius))
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private bool DetonateAt(int index)
+    {
+        ProjectileState mine = _projectiles[index];
+        SubmitExplosionAt(mine, mine.Position);
+        RemoveAt(index);
+        return true;
+    }
 
     public void SpawnRadial(
         Vector2 center,
@@ -257,6 +370,49 @@ public partial class ProjectileSystem : Node
         return false;
     }
 
+    /// <summary>
+    /// Echo hunter auto recall: when a disc runs out of bounces or reaches 70%
+    /// of its lifetime it turns back toward the player with one extra pierce.
+    /// The return path continuously tracks the player but turns at a capped
+    /// rate, and each projectile recalls at most once.
+    /// </summary>
+    private void ApplyAutoRecall(ref ProjectileState projectile, float delta)
+    {
+        if (!AutoRecallEnabled || projectile.DetonateOnExpire ||
+            projectile.SourceSpellId != RicochetDiscId)
+        {
+            return;
+        }
+
+        if (!projectile.HasAutoRecalled &&
+            (projectile.RemainingBounces <= 0 || projectile.RemainingLife <= projectile.InitialLife * 0.3f))
+        {
+            projectile.HasAutoRecalled = true;
+            projectile.IsReturning = true;
+            projectile.RemainingHits = Math.Max(projectile.RemainingHits, 0) + 1;
+            ClearHits(ref projectile);
+        }
+
+        if (!projectile.HasAutoRecalled || projectile.Velocity.LengthSquared() < 0.0001f)
+        {
+            return;
+        }
+
+        Vector2 playerPosition = new(_player.GlobalPosition.X, _player.GlobalPosition.Z);
+        float speed = projectile.Velocity.Length();
+        float currentAngle = Mathf.Atan2(projectile.Velocity.Y, projectile.Velocity.X);
+        Vector2 desired = playerPosition - projectile.Position;
+        if (desired.LengthSquared() < 0.0001f)
+        {
+            return;
+        }
+        float targetAngle = Mathf.Atan2(desired.Y, desired.X);
+        float maxTurn = AutoRecallTurnRateRadiansPerSecond * delta;
+        float turn = Mathf.Wrap(targetAngle - currentAngle, -Mathf.Pi, Mathf.Pi);
+        currentAngle += Mathf.Clamp(turn, -maxTurn, maxTurn);
+        projectile.Velocity = new Vector2(Mathf.Cos(currentAngle), Mathf.Sin(currentAngle)) * speed;
+    }
+
     private void ApplyHoming(ref ProjectileState projectile, float delta)
     {
         if (!projectile.Modules.HasFlag(ProjectileModules.Homing) || projectile.Velocity.LengthSquared() < 0.001f)
@@ -271,6 +427,10 @@ public partial class ProjectileSystem : Node
         {
             if (HasHit(projectile, candidate) || !_enemies.TryGet(candidate, out EnemyState enemy)) continue;
             float distance = projectile.Position.DistanceSquaredTo(enemy.Position);
+            if (PreferMarkedTargets && enemy.Elements.Mark.Stacks > 0)
+            {
+                distance -= 1000.0f;
+            }
             if (distance < bestDistance)
             {
                 nearest = candidate;
@@ -349,18 +509,27 @@ public partial class ProjectileSystem : Node
         EntityHandle best = EntityHandle.Invalid;
         Vector2 bestPosition = default;
         float bestDistance = float.MaxValue;
+        bool bestIsMarked = false;
         foreach (EntityHandle candidate in _candidates)
         {
             if (HasHit(projectile, candidate) || !_enemies.TryGet(candidate, out EnemyState enemy))
             {
                 continue;
             }
+            bool isMarked = PreferMarkedTargets && enemy.Elements.Mark.Stacks > 0;
             float distance = origin.DistanceSquaredTo(enemy.Position);
-            if (distance < bestDistance)
+            if (!best.IsValid || (isMarked, distance) switch
+                {
+                    (true, _) when !bestIsMarked => true,
+                    (true, _) when bestIsMarked => distance < bestDistance,
+                    (false, _) when bestIsMarked => false,
+                    _ => distance < bestDistance
+                })
             {
                 best = candidate;
                 bestPosition = enemy.Position;
                 bestDistance = distance;
+                bestIsMarked = isMarked;
             }
         }
         if (!best.IsValid)

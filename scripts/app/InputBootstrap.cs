@@ -12,8 +12,6 @@ public static class InputBootstrap
     public const string AimRight = "aim_right";
     public const string AimUp = "aim_up";
     public const string AimDown = "aim_down";
-    public const string Dodge = "dodge";
-    public const string Catalyze = "catalyze";
     public const string Pause = "pause";
 
     public static void EnsureDefaultBindings()
@@ -26,8 +24,6 @@ public static class InputBootstrap
         EnsureAction(AimRight, Key.None, JoyAxis.RightX, 1.0f);
         EnsureAction(AimUp, Key.None, JoyAxis.RightY, -1.0f);
         EnsureAction(AimDown, Key.None, JoyAxis.RightY, 1.0f);
-        EnsureButtonAction(Dodge, Key.Space, JoyButton.A);
-        EnsureTriggerAction(Catalyze, MouseButton.Right, JoyAxis.TriggerRight);
         EnsureButtonAction(Pause, Key.Escape, JoyButton.Start);
     }
 
@@ -61,22 +57,6 @@ public static class InputBootstrap
 
         InputMap.ActionAddEvent(action, new InputEventKey { PhysicalKeycode = key });
         InputMap.ActionAddEvent(action, new InputEventJoypadButton { ButtonIndex = button });
-    }
-
-    private static void EnsureTriggerAction(string action, MouseButton mouseButton, JoyAxis axis)
-    {
-        EnsureActionExists(action);
-        if (InputMap.ActionGetEvents(action).Count > 0)
-        {
-            return;
-        }
-
-        InputMap.ActionAddEvent(action, new InputEventMouseButton { ButtonIndex = mouseButton });
-        InputMap.ActionAddEvent(action, new InputEventJoypadMotion
-        {
-            Axis = axis,
-            AxisValue = 1.0f
-        });
     }
 
     private static void EnsureActionExists(string action)

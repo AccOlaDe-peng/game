@@ -67,14 +67,6 @@ aim_down={
 "deadzone": 0.2,
 "events": []
 }
-dodge={
-"deadzone": 0.5,
-"events": []
-}
-catalyze={
-"deadzone": 0.5,
-"events": []
-}
 pause={
 "deadzone": 0.5,
 "events": []

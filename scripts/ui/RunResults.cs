@@ -1,4 +1,5 @@
 using Catalyst.App;
+using Catalyst.Spells;
 using Godot;
 
 namespace Catalyst.UI;
@@ -35,17 +36,19 @@ public partial class RunResults : Control
     public void ShowSummary(RunSummary summary)
     {
         TimeSpan time = TimeSpan.FromSeconds(summary.SurvivalTime);
-        _title.Text = summary.Victory ? "巨像已倒下" : "试炼结束";
+        // 远征报告：失败仍以“信号中断”明确表达，不牺牲可读性。
+        _title.Text = summary.Victory ? "灾变核心已封印" : "远征连接中断";
         _title.Modulate = summary.Victory
             ? new Color(1.0f, 0.76f, 0.28f)
             : new Color(1.0f, 0.44f, 0.38f);
         _summary.Text =
             $"结果  {summary.Result}\n" +
-            $"时间  {(int)time.TotalMinutes:00}:{time.Seconds:00}    击杀  {summary.KillCount}\n" +
-            $"Seed  {summary.Seed}";
+            $"生存时间  {(int)time.TotalMinutes:00}:{time.Seconds:00}    击杀  {summary.KillCount}\n" +
+            $"相位坐标  Seed: {summary.Seed}    记忆碎片  +{summary.MemoryShardsEarned}";
         _damage.Text =
             $"总伤害  {summary.DamageDealt:0}    承受伤害  {summary.DamageTaken:0}\n" +
-            $"元素反应  {summary.ReactionCount} 次 / {summary.ReactionDamage:0} 伤害" +
+            $"元素反应  {summary.ReactionCount} 次 / {summary.ReactionDamage:0} 伤害\n" +
+            $"催化协议  执行 {summary.CatalysisExecutionCount} 次 · 触发 {summary.CatalysisReactionCount} 次反应 / {summary.CatalysisReactionDamage:0} 伤害" +
             (summary.Victory || string.IsNullOrWhiteSpace(summary.DeathCause)
                 ? string.Empty
                 : $"\n最后伤害来源  {summary.DeathCause}");
@@ -54,7 +57,7 @@ public partial class RunResults : Control
             : "法术伤害\n" + string.Join("\n", summary.DamageBySpell
                 .OrderByDescending(pair => pair.Value)
                 .Select(pair => $"  {ToDisplayName(pair.Key)}  {pair.Value:0}"));
-        _build.Text = "最终构筑\n" + string.Join("\n", summary.FinalBuild.Select(item => $"  {item}"));
+        _build.Text = "最终构筑\n" + RunBuildSnapshotBuilder.Describe(summary.Build);
         Visible = true;
         GetNode<Button>("%RestartButton").GrabFocus();
     }

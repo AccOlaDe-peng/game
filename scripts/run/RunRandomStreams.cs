@@ -9,6 +9,7 @@ public sealed class RunRandomStreams
     public RandomNumberGenerator Upgrade { get; }
     public RandomNumberGenerator SpawnPosition { get; }
     public RandomNumberGenerator GameplayProc { get; }
+    public RandomNumberGenerator PassiveProc { get; }
     public RandomNumberGenerator Presentation { get; }
 
     public RunRandomStreams(ulong rootSeed)
@@ -17,6 +18,7 @@ public sealed class RunRandomStreams
         Upgrade = Create(rootSeed, "upgrade");
         SpawnPosition = Create(rootSeed, "spawn_position");
         GameplayProc = Create(rootSeed, "gameplay_proc");
+        PassiveProc = Create(rootSeed, "passive_proc");
         Presentation = Create(rootSeed, "presentation");
     }
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3]
+[gd_scene load_steps=52 format=3]
 
 [ext_resource type="Script" path="res://scripts/run/RunRoot.cs" id="1_root"]
 [ext_resource type="Script" path="res://scripts/run/RunController.cs" id="2_controller"]
@@ -36,6 +36,8 @@
 [ext_resource type="PackedScene" path="res://assets/art/environment/props/Barrel.gltf" id="34_barrel"]
 [ext_resource type="PackedScene" path="res://assets/art/environment/props/Cauldron.gltf" id="35_cauldron"]
 [ext_resource type="Texture2D" path="res://assets/art/particles/circle_02.png" id="36_rune"]
+[ext_resource type="Script" path="res://scripts/passives/AutoCatalysisSystem.cs" id="37_autocatalysis"]
+[ext_resource type="Script" path="res://scripts/passives/PassiveSystem.cs" id="38_passives"]
 
 [sub_resource type="Environment" id="Environment_arena"]
 background_mode = 1
@@ -399,6 +401,12 @@ script = ExtResource("19_events")
 
 [node name="RunStatistics" type="Node" parent="SimulationRoot"]
 script = ExtResource("3_stats")
+
+[node name="AutoCatalysisSystem" type="Node" parent="SimulationRoot"]
+script = ExtResource("37_autocatalysis")
+
+[node name="PassiveSystem" type="Node" parent="SimulationRoot"]
+script = ExtResource("38_passives")
 
 [node name="AudioFeedbackSystem" type="Node" parent="SimulationRoot"]
 script = ExtResource("27_audio_feedback")

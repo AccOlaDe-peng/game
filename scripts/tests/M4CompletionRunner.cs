@@ -76,7 +76,7 @@ public partial class M4CompletionRunner : Node
             Require(controller.State == RunState.Victory && boss.IsDefeated,
                 "Boss defeat did not complete the run.");
             Require(results.Visible, "Results screen was not shown after victory.");
-            Require(saves.Profile.SchemaVersion == 3 &&
+            Require(saves.Profile.SchemaVersion == 4 &&
                 saves.Profile.LastRun is { BossDefeated: true, Victory: true } &&
                 saves.Profile.BossDefeated &&
                 saves.Profile.UnlockedCharacterIds.Contains("character.rift_engineer") &&

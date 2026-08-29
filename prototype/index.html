@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project Catalyst · UI Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="viewport" id="app">
+    <section class="screen active" data-screen="menu">
+      <div class="menu-brand">
+        <small>ARCANE RESEARCH DIVISION / 07</small>
+        <h1>PROJECT<br>CATALYST</h1>
+        <p>元素反应实验 · 单人战场协议</p>
+      </div>
+      <article class="panel menu-panel">
+        <header><h2>选择实验载体</h2><span>记忆碎片 120 · 最佳生存 12:48</span></header>
+        <div class="rule"></div>
+        <div class="characters">
+          <button class="character selected" data-character="元素行者" data-weapon="脉冲步枪"><b>01</b><strong>元素行者</strong><span>脉冲步枪 · 平衡</span></button>
+          <button class="character" data-character="回响猎手" data-weapon="弹射圆盘"><b>02</b><strong>回响猎手</strong><span>弹射圆盘 · 机动</span></button>
+          <button class="character locked"><b>03</b><strong>裂隙工匠</strong><span>未解锁 · 记忆碎片 300</span></button>
+        </div>
+        <div class="selection"><small>当前选择</small><strong id="selection-name">元素行者 · 脉冲步枪</strong><p>操纵多重元素，以催化脉冲主动引爆战场反应。</p></div>
+        <button class="primary" data-go="hud">启动试炼 <span>→</span></button>
+        <div class="split"><button data-go="settings">系统设置</button><button>退出实验</button></div>
+      </article>
+      <div class="build">CATALYST BUILD M4 · GODOT 4.7.1</div>
+    </section>
+
+    <section class="screen arena" data-screen="hud">
+      <div class="world"><div class="rune"></div><div class="player">◆</div><i class="fire"></i><i class="frost"></i><i class="spark"></i></div>
+      <header class="hud-top"><b>08:42</b><span>PHASE 03 / 高压怪潮</span><small>SEED 7842091</small><button data-go="pause">Ⅱ 暂停</button></header>
+      <aside class="status glass"><label>生命 <b>78 / 100</b></label><div class="bar hp"><i></i></div><label>等级 12 <b>640 / 880</b></label><div class="bar xp"><i></i></div></aside>
+      <div class="objective glass"><small>当前目标</small><b>稳定元素法阵</b><div class="bar"><i style="width:64%"></i></div></div>
+      <div class="reaction">[ 火 + 冰 ] <b>热裂</b> <span>1,284</span></div>
+      <aside class="catalyze glass"><small>主动协议 / 鼠标右键</small><b>元素催化 · 就绪</b><div class="bar full"><i></i></div><span>奥术飞弹 5A · 火球术 3B · 冰霜长枪 4A</span></aside>
+      <footer>WASD 移动　·　SPACE 闪避　·　鼠标右键元素催化　·　ESC 暂停</footer>
+    </section>
+
+    <section class="screen overlay" data-screen="pause">
+      <article class="panel compact"><small>战场时间已冻结</small><h2>战场暂停</h2><div class="metric"><span>08:42<br><small>生存时间</small></span><span>12<br><small>当前等级</small></span><span>1,284<br><small>击杀</small></span></div><button class="primary" data-go="hud">继续试炼</button><button data-go="settings">系统设置</button><button data-go="upgrade">查看升级界面</button><button data-go="menu">返回主菜单</button></article>
+    </section>
+
+    <section class="screen overlay" data-screen="upgrade">
+      <article class="panel wide"><small>战场时间已冻结</small><h2>元素共鸣</h2><p>选择一项改造方案</p><div class="upgrade-grid">
+        <button class="upgrade"><em>✦</em><small>行为改造</small><strong>裂变火球</strong><span>命中后分裂为 3 枚小型火球，各造成 45% 伤害。</span><b>火球术 · III → IV</b></button>
+        <button class="upgrade"><em>⌁</em><small>元素强化</small><strong>深度冻结</strong><span>冰霜层数上限 +2，冻结时间延长 35%。</span><b>冰霜 · 稀有</b></button>
+        <button class="upgrade"><em>↯</em><small>反应改造</small><strong>过载回路</strong><span>传导闪电额外弹射 2 次，并传播感电。</span><b>雷电 · 史诗</b></button>
+      </div><button class="reroll">↻ 刷新方案（剩余 1 次）</button><button class="ghost" data-go="hud">返回战场</button></article>
+    </section>
+
+    <section class="screen overlay" data-screen="settings">
+      <article class="panel settings"><header><div><small>SYSTEM CONFIGURATION</small><h2>系统设置</h2></div><button data-back>×</button></header>
+        <div class="setting-grid"><section><h3>音频</h3><label>主音量 <output>80%</output><input type="range" value="80"></label><label>音乐音量 <output>65%</output><input type="range" value="65"></label><label>音效音量 <output>90%</output><input type="range" value="90"></label></section><section><h3>显示与辅助</h3><label>镜头震动 <output>40%</output><input type="range" value="40"></label><div class="options"><button>1920 × 1080</button><button>高质量</button><button>120 FPS</button></div><label class="toggle">全屏 <input type="checkbox" checked></label><label class="toggle">显示伤害数字 <input type="checkbox" checked></label><label class="toggle">元素图标辅助 <input type="checkbox" checked></label></section></div>
+        <div class="split"><button class="primary" data-back>应用设置</button><button data-back>取消</button></div>
+      </article>
+    </section>
+
+    <section class="screen overlay" data-screen="results">
+      <article class="panel results"><small>RUN COMPLETE / VICTORY</small><h2>巨像已倒下</h2><p>元素研究遗迹 · 试炼记录已归档</p><div class="result-metrics"><span><b>15:36</b>生存时间</span><span><b>2,418</b>击杀</span><span><b>18</b>最终等级</span><span><b>+86</b>记忆碎片</span></div><div class="result-columns"><section><h3>战斗记录</h3><p>总伤害 <b>482,940</b></p><p>元素反应 <b>216 次</b></p><p>反应伤害 <b>184,320</b></p></section><section><h3>最终构筑</h3><p>火球术 V · 裂变核心</p><p>冰霜长枪 V · 穿刺</p><p>连锁闪电 IV · 过载</p></section></div><div class="split"><button class="primary" data-go="hud">再次挑战</button><button data-go="menu">返回主菜单</button></div></article>
+    </section>
+  </main>
+  <nav class="prototype-nav"><span>原型导航</span><button data-go="menu">主菜单</button><button data-go="hud">局内 HUD</button><button data-go="pause">暂停</button><button data-go="upgrade">升级</button><button data-go="settings">设置</button><button data-go="results">结算</button></nav>
+  <script src="app.js"></script>
+</body>
+</html>

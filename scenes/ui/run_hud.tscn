@@ -58,6 +58,7 @@ offset_bottom = 70.0
 grow_horizontal = 2
 mouse_filter = 2
 texture = ExtResource("3_panel")
+modulate = Color(0.12, 0.3, 0.34, 0.9)
 patch_margin_left = 16
 patch_margin_top = 16
 patch_margin_right = 16
@@ -71,6 +72,7 @@ offset_right = 334.0
 offset_bottom = 202.0
 mouse_filter = 2
 texture = ExtResource("3_panel")
+modulate = Color(0.12, 0.3, 0.34, 0.9)
 patch_margin_left = 16
 patch_margin_top = 16
 patch_margin_right = 16
@@ -91,6 +93,7 @@ grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 texture = ExtResource("3_panel")
+modulate = Color(0.12, 0.3, 0.34, 0.9)
 patch_margin_left = 16
 patch_margin_top = 16
 patch_margin_right = 16
@@ -130,7 +133,7 @@ text = "Seed: -"
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
-text = "暂停"
+text = "Ⅱ  暂停"
 
 [node name="Status" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -190,23 +193,46 @@ grow_vertical = 0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.88, 1, 1)
-text = "元素催化：就绪"
+text = "72%"
 horizontal_alignment = 2
 
 [node name="CatalyzeBar" type="ProgressBar" parent="CatalyzeStatus"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 16)
 layout_mode = 2
-max_value = 5.0
-value = 5.0
+max_value = 1.0
+value = 0.0
 show_percentage = false
 theme_override_styles/background = SubResource("StyleProgressBackground")
 theme_override_styles/fill = SubResource("StyleBlue")
 
+[node name="CatalysisStateLabel" type="Label" parent="CatalyzeStatus"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.88, 1, 1)
+text = "催化协议充能中"
+horizontal_alignment = 2
+
+[node name="CatalysisRequirementLabel" type="Label" parent="CatalyzeStatus"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "候选 0  ·  评分 0.0"
+horizontal_alignment = 2
+
+[node name="CatalysisResultLabel" type="Label" parent="CatalyzeStatus"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.95, 1, 1)
+text = "自动催化完成"
+horizontal_alignment = 2
+
 [node name="SpellHint" type="Label" parent="CatalyzeStatus"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.76, 0.44, 1)
+theme_override_colors/font_color = Color(0.52, 0.92, 0.98, 1)
 text = "奥术飞弹 1"
 horizontal_alignment = 2
 
@@ -303,7 +329,7 @@ offset_right = 580.0
 offset_bottom = -20.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
-text = "WASD / 左摇杆移动  ·  Space / A闪避  ·  鼠标右键 / RT元素催化  ·  Esc暂停"
+text = "WASD / 左摇杆移动  ·  Esc / 菜单键暂停"
 
 [node name="PausePanel" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -315,7 +341,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-color = Color(0.01, 0.015, 0.025, 0.82)
+color = Color(0.004, 0.01, 0.015, 0.9)
 
 [node name="Center" type="CenterContainer" parent="PausePanel"]
 layout_mode = 1
@@ -332,8 +358,9 @@ theme_override_constants/separation = 14
 [node name="PauseTitle" type="Label" parent="PausePanel/Center/Menu"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
-text = "暂停"
+theme_override_colors/font_color = Color(0.82, 0.97, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = "战场暂停"
 horizontal_alignment = 1
 
 [node name="ResumeButton" type="Button" parent="PausePanel/Center/Menu"]

@@ -9,6 +9,9 @@ using Catalyst.Elements;
 using Catalyst.Spells;
 using Catalyst.Events;
 using Catalyst.Boss;
+using Catalyst.Meta;
+using Catalyst.Passives;
+using Catalyst.Waves;
 using Godot;
 
 namespace Catalyst.Run;
@@ -42,7 +45,6 @@ public partial class RunRoot : Node
 
         PlayerHealth health = GetNode<PlayerHealth>("WorldRoot/Player/HealthComponent");
         PlayerProgression progression = GetNode<PlayerProgression>("WorldRoot/Player/Progression");
-        CatalyzeAbility catalyze = GetNode<CatalyzeAbility>("WorldRoot/Player/CatalyzeAbility");
         EnemySystem enemies = GetNode<EnemySystem>("SimulationRoot/EntitySystem");
         ProjectileSystem projectiles = GetNode<ProjectileSystem>("SimulationRoot/ProjectileSystem");
         PickupSystem pickups = GetNode<PickupSystem>("SimulationRoot/PickupSystem");
@@ -52,11 +54,20 @@ public partial class RunRoot : Node
         _spells = GetNode<SpellSystem>("SimulationRoot/SpellSystem");
         RunEventSystem events = GetNode<RunEventSystem>("SimulationRoot/RunEventSystem");
         _boss = GetNode<BossController>("SimulationRoot/BossController");
+        AutoCatalysisSystem catalysis = GetNode<AutoCatalysisSystem>("SimulationRoot/AutoCatalysisSystem");
+        PassiveSystem passives = GetNode<PassiveSystem>("SimulationRoot/PassiveSystem");
 
         _controller.BeginRun();
-        _hud.Bind(_controller, health, progression, catalyze, elements, _spells, events, enemies, _boss);
+        _hud.Bind(_controller, health, progression, catalysis, elements, _spells, events, enemies, _boss);
         _debugHud.Bind(_controller, enemies, projectiles, pickups, _statistics);
+        _debugHud.BindPassives(passives, catalysis);
         _upgradeScreen.Bind(upgrades);
+        // Level-up restores 20% health: the survival anchor that replaces the
+        // removed dodge as the player's recovery tool.
+        progression.LevelGained += _ => health.RestoreFraction(0.20f);
+        WaveDirector waves = GetNode<WaveDirector>("SimulationRoot/WaveDirector");
+        waves.EliteAnnounced += text => _hud.ShowAnnouncement(
+            text, new Color(1.0f, 0.58f, 0.18f));
         _hud.PauseRequested += _controller.TogglePause;
         _hud.ReturnRequested += ReturnToMenu;
         _hud.RestartRequested += RestartRun;
@@ -95,10 +106,12 @@ public partial class RunRoot : Node
         }
         _summaryRecorded = true;
         bool victory = state == RunState.Victory;
+        SaveService saveService = GetNode<SaveService>("/root/SaveService");
+        CharacterDefinition character = saveService.ActiveCharacter;
         RunSummary summary = new()
         {
-            CharacterId = GetNode<SaveService>("/root/SaveService").ActiveCharacter.Id,
-            StartingWeaponId = GetNode<SaveService>("/root/SaveService").ActiveCharacter.StartingWeaponId,
+            CharacterId = character.Id,
+            StartingWeaponId = character.StartingWeaponId,
             Seed = _controller.RunSeed,
             SurvivalTime = _controller.ElapsedSeconds,
             KillCount = _statistics.KillCount,
@@ -108,20 +121,26 @@ public partial class RunRoot : Node
             DamageTaken = _statistics.DamageTaken,
             ReactionCount = _statistics.ReactionCount,
             ReactionDamage = _statistics.ReactionDamage,
-            Result = victory ? "胜利" : "失败",
+            CatalysisExecutionCount = _statistics.CatalysisExecutionCount,
+            CatalysisReactionCount = _statistics.CatalysisReactionCount,
+            CatalysisReactionDamage = _statistics.CatalysisReactionDamage,
+            RerollCount = _statistics.UpgradeRerollCount,
+            Result = victory ? "远征完成" : "信号中断",
             DeathCause = victory ? string.Empty : _statistics.LastDamageCause,
             DamageBySpell = _statistics.DamageBySpell.ToDictionary(pair => pair.Key, pair => pair.Value),
             ReactionCounts = _statistics.ReactionsByKind.ToDictionary(
                 pair => pair.Key.ToString(), pair => pair.Value),
-            FinalBuild = _spells.Loadout.Select(runtime =>
-                $"{runtime.Definition.DisplayName} Lv.{runtime.Level}" +
-                (runtime.SelectedBranch == SpellBranch.None
-                    ? string.Empty
-                    : $" / 分支 {runtime.SelectedBranch}"))
-                .ToList(),
+            PassiveTriggerCounts = _statistics.PassiveTriggerCounts.ToDictionary(
+                pair => pair.Key, pair => pair.Value),
+            Build = RunBuildSnapshotBuilder.Build(
+                character.Id,
+                character.StartingWeaponId,
+                character.CorePassiveIds,
+                _spells.Loadout),
             CompletedAtUtc = DateTimeOffset.UtcNow
         };
-        GetNode<SaveService>("/root/SaveService").RecordRun(summary);
+        summary.MemoryShardsEarned = SaveService.CalculateMemoryShards(summary);
+        saveService.RecordRun(summary);
         _results.ShowSummary(summary);
     }
 }

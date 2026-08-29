@@ -1,7 +1,50 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/menu/MainMenu.cs" id="1_menu"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_screen.tscn" id="2_settings"]
+[ext_resource type="Theme" path="res://resources/ui/adventure_theme.tres" id="3_theme"]
+
+[sub_resource type="StyleBoxFlat" id="MainPanel"]
+bg_color = Color(0.025, 0.045, 0.06, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.38, 0.43, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.48)
+shadow_size = 20
+
+[sub_resource type="StyleBoxFlat" id="PrimaryButton"]
+bg_color = Color(0.78, 0.49, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.77, 0.36, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.95, 0.48, 0.1, 0.22)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="PrimaryHover"]
+bg_color = Color(0.96, 0.62, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.9, 0.58, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(1, 0.55, 0.12, 0.38)
+shadow_size = 11
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -10,6 +53,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_theme")
 script = ExtResource("1_menu")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -19,109 +63,159 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.025, 0.035, 0.055, 1)
+mouse_filter = 2
+color = Color(0.012, 0.025, 0.034, 1)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="GlowLeft" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -40.0
+offset_top = 110.0
+offset_right = -32.0
+offset_bottom = 610.0
+mouse_filter = 2
+color = Color(0.16, 0.78, 0.86, 0.8)
+
+[node name="Header" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-offset_top = 8.0
-offset_bottom = -8.0
+anchors_preset = 0
+offset_left = 62.0
+offset_top = 52.0
+offset_right = 490.0
+offset_bottom = 174.0
+theme_override_constants/separation = 2
 
-[node name="Menu" type="VBoxContainer" parent="Center"]
+[node name="Eyebrow" type="Label" parent="Header"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_colors/font_color = Color(0.3, 0.84, 0.91, 1)
+theme_override_font_sizes/font_size = 13
+text = "ARCANE RESEARCH DIVISION  /  07"
 
-[node name="Title" type="Label" parent="Center/Menu"]
+[node name="Title" type="Label" parent="Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.86, 1, 1)
+theme_override_colors/font_color = Color(0.91, 0.96, 0.97, 1)
 theme_override_font_sizes/font_size = 42
 text = "PROJECT CATALYST"
-horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/Menu"]
+[node name="Subtitle" type="Label" parent="Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.75, 0.82, 1)
-theme_override_font_sizes/font_size = 16
-text = "元素反应 · 单机纵向切片"
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.48, 0.59, 0.64, 1)
+theme_override_font_sizes/font_size = 14
+text = "元素反应实验 · 单人战场协议"
 
-[node name="Spacer" type="Control" parent="Center/Menu"]
-custom_minimum_size = Vector2(0, 6)
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -370.0
+offset_top = -235.0
+offset_right = 370.0
+offset_bottom = 235.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("MainPanel")
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
 layout_mode = 2
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 26
 
-[node name="RecordLabel" type="Label" parent="Center/Menu"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.64, 0.74, 0.84, 1)
-text = "尚无挑战记录"
-horizontal_alignment = 1
-
-[node name="CharacterHeading" type="Label" parent="Center/Menu"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "选择角色与起始武器"
-horizontal_alignment = 1
-
-[node name="CharacterButtons" type="HBoxContainer" parent="Center/Menu"]
+[node name="Menu" type="VBoxContainer" parent="Panel/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ElementalistButton" type="Button" parent="Center/Menu/CharacterButtons"]
+[node name="TopRow" type="HBoxContainer" parent="Panel/Margin/Menu"]
+layout_mode = 2
+
+[node name="CharacterHeading" type="Label" parent="Panel/Margin/Menu/TopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.8, 0.9, 0.93, 1)
+theme_override_font_sizes/font_size = 18
+text = "选择实验载体"
+
+[node name="RecordLabel" type="Label" parent="Panel/Margin/Menu/TopRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.47, 0.61, 0.66, 1)
+theme_override_font_sizes/font_size = 13
+text = "尚无挑战记录"
+horizontal_alignment = 2
+
+[node name="Rule" type="HSeparator" parent="Panel/Margin/Menu"]
+layout_mode = 2
+
+[node name="CharacterButtons" type="HBoxContainer" parent="Panel/Margin/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ElementalistButton" type="Button" parent="Panel/Margin/Menu/CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(216, 74)
 layout_mode = 2
 text = "元素行者\n脉冲步枪"
 
-[node name="HunterButton" type="Button" parent="Center/Menu/CharacterButtons"]
+[node name="HunterButton" type="Button" parent="Panel/Margin/Menu/CharacterButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 64)
+custom_minimum_size = Vector2(216, 74)
 layout_mode = 2
 text = "回响猎手\n弹射圆盘"
 
-[node name="EngineerButton" type="Button" parent="Center/Menu/CharacterButtons"]
+[node name="EngineerButton" type="Button" parent="Panel/Margin/Menu/CharacterButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 64)
+custom_minimum_size = Vector2(216, 74)
 layout_mode = 2
 text = "裂隙工匠\n元素地雷"
 
-[node name="SelectionLabel" type="Label" parent="Center/Menu"]
+[node name="SelectionLabel" type="Label" parent="Panel/Margin/Menu"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.76, 0.3, 1)
+theme_override_colors/font_color = Color(1, 0.68, 0.28, 1)
+theme_override_font_sizes/font_size = 16
 text = "已选择：元素行者 · 脉冲步枪"
-horizontal_alignment = 1
 
-[node name="CharacterDetailsLabel" type="Label" parent="Center/Menu"]
+[node name="CharacterDetailsLabel" type="Label" parent="Panel/Margin/Menu"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(590, 76)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.76, 0.87, 1)
+theme_override_colors/font_color = Color(0.59, 0.7, 0.75, 1)
 theme_override_font_sizes/font_size = 13
+autowrap_mode = 2
+clip_text = true
 text = "直线投射 · 入门"
-horizontal_alignment = 1
 
-[node name="StartButton" type="Button" parent="Center/Menu"]
+[node name="StartButton" type="Button" parent="Panel/Margin/Menu"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(590, 50)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "使用所选角色开始"
+theme_override_colors/font_color = Color(0.08, 0.055, 0.025, 1)
+theme_override_colors/font_hover_color = Color(0.05, 0.035, 0.015, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("PrimaryButton")
+theme_override_styles/hover = SubResource("PrimaryHover")
+theme_override_styles/focus = SubResource("PrimaryHover")
+text = "启动试炼  →"
 
-[node name="SettingsButton" type="Button" parent="Center/Menu"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(590, 42)
+[node name="FooterActions" type="HBoxContainer" parent="Panel/Margin/Menu"]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SettingsButton" type="Button" parent="Panel/Margin/Menu/FooterActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "设置"
 
-[node name="QuitButton" type="Button" parent="Center/Menu"]
+[node name="QuitButton" type="Button" parent="Panel/Margin/Menu/FooterActions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(590, 42)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
+size_flags_horizontal = 3
 text = "退出"
 
 [node name="Version" type="Label" parent="."]
@@ -131,14 +225,15 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -36.0
-offset_right = -20.0
-offset_bottom = -16.0
+offset_left = -280.0
+offset_top = -38.0
+offset_right = -30.0
+offset_bottom = -18.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.45, 0.5, 0.6, 1)
-text = "M4 · Godot 4.7.1"
+theme_override_colors/font_color = Color(0.28, 0.36, 0.4, 1)
+theme_override_font_sizes/font_size = 12
+text = "CATALYST BUILD M4  ·  GODOT 4.7.1"
 horizontal_alignment = 2
 
 [node name="SettingsScreen" parent="." instance=ExtResource("2_settings")]

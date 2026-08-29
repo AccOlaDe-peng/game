@@ -18,14 +18,17 @@ public partial class UpgradeSystem : Node
     private readonly List<UpgradeDefinition> _generalDefinitions = new();
     private readonly List<UpgradeChoice> _candidateBuffer = new(24);
     private readonly List<UpgradeChoice> _choices = new(3);
+    private readonly List<string> _lastChoiceIds = new(3);
     private RunController _run = null!;
     private PlayerProgression _progression = null!;
     private PlayerController _player = null!;
     private PlayerHealth _health = null!;
     private SpellSystem _spells = null!;
     private PickupSystem _pickups = null!;
+    private RunStatistics _statistics = null!;
     private int _pendingLevelUps;
     private bool _highQualitySelection;
+    private bool _isReroll;
 
     public int RerollsRemaining { get; private set; } = 1;
     public IReadOnlyList<UpgradeChoice> CurrentChoices => _choices;
@@ -39,6 +42,7 @@ public partial class UpgradeSystem : Node
         _health = GetNode<PlayerHealth>("../../WorldRoot/Player/HealthComponent");
         _spells = GetNode<SpellSystem>("../SpellSystem");
         _pickups = GetNode<PickupSystem>("../PickupSystem");
+        _statistics = GetNode<RunStatistics>("../RunStatistics");
 
         ContentCatalog catalog = GetNode<ContentCatalog>("/root/ContentCatalog");
         foreach (UpgradeDefinition definition in catalog.All<UpgradeDefinition>())
@@ -76,6 +80,8 @@ public partial class UpgradeSystem : Node
             return false;
         }
         RerollsRemaining--;
+        _statistics.RecordUpgradeReroll();
+        _isReroll = true;
         PresentChoices();
         return true;
     }
@@ -114,6 +120,31 @@ public partial class UpgradeSystem : Node
         {
             _candidateBuffer.RemoveAll(choice => choice.Kind == UpgradeChoiceKind.General);
         }
+        int attempts = 0;
+        int maximumAttempts = _isReroll ? 8 : 1;
+        List<string> selectedIds = new(3);
+        do
+        {
+            attempts++;
+            DrawThreeChoices();
+            selectedIds.Clear();
+            selectedIds.AddRange(_choices.Select(choice => choice.Id));
+        }
+        while (_isReroll && attempts < maximumAttempts &&
+               SameSelection(selectedIds, _lastChoiceIds));
+        _isReroll = false;
+        _lastChoiceIds.Clear();
+        _lastChoiceIds.AddRange(selectedIds);
+        ChoicesPresented?.Invoke(_choices, RerollsRemaining);
+    }
+
+    private static bool SameSelection(List<string> current, List<string> previous)
+    {
+        return current.Count == previous.Count && current.All(previous.Contains);
+    }
+
+    private void DrawThreeChoices()
+    {
         _choices.Clear();
         while (_choices.Count < 3 && _candidateBuffer.Count > 0)
         {
@@ -132,7 +163,6 @@ public partial class UpgradeSystem : Node
             _choices.Add(_candidateBuffer[selectedIndex]);
             _candidateBuffer.RemoveAt(selectedIndex);
         }
-        ChoicesPresented?.Invoke(_choices, RerollsRemaining);
     }
 
     private void BuildCandidates()
@@ -197,6 +227,10 @@ public partial class UpgradeSystem : Node
                 continue;
             }
             int nextLevel = runtime.InstalledStandardCards.GetValueOrDefault(card.Id) + 1;
+            // Predict the payload-adapter discount: the first installed payload
+            // card will cost 1 less (min 0) for characters that carry it.
+            bool discountApplies = runtime.DiscountedCardId is null &&
+                card.Category == StandardCardCategory.Payload;
             _candidateBuffer.Add(new UpgradeChoice(
                 $"install.{runtime.Definition.Id}.{card.Id}.l{nextLevel}",
                 $"{runtime.Definition.DisplayName}｜{card.DisplayName} Lv.{nextLevel}",
@@ -204,7 +238,10 @@ public partial class UpgradeSystem : Node
                 GetStandardCardWeight(runtime, card),
                 UpgradeChoiceKind.InstallStandardCard,
                 Spell: runtime.Definition.CastKind,
-                StandardCard: card));
+                StandardCard: card,
+                PowerBefore: runtime.CurrentPower,
+                PowerAfter: Math.Max(0, runtime.CurrentPower + card.PowerCost -
+                    (discountApplies ? 1 : 0))));
         }
     }
 
