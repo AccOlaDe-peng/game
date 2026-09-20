@@ -33,3 +33,6 @@ Desktop.ini
 
 # Local runtime data
 user_data/
+
+# Reference upstream repos (asset/source study, not part of this project)
+/reference/

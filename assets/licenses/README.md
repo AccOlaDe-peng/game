@@ -21,6 +21,11 @@
 | RPG Audio (audio/rpg) | Kenney Vleugels | kenney.nl | CC0 1.0 | ✔ | ✔ | 否 | 2026-08 |
 | UI Pack – Adventure (ui) | Kenney Vleugels | kenney.nl | CC0 1.0 | ✔ | ✔ | 否 | 2026-08 |
 | Mixamo Animations (animations/mixamo) | Adobe | mixamo.com | Adobe Mixamo 条款（免费可商用，无需署名） | ✔ | ✔ | 否 | 2026-08 |
+| Graveyard Kit (environment/graveyard) | Kenney Vleugels | kenney-assets.itch.io/graveyard-kit | CC0 1.0 | ✔ | ✔ | 否 | 2026-09 |
+| Ultimate Village RPG Pack (environment/village, nature/trees) | zsky2000 | zsky2000.itch.io/ultimate-village-rpg-pack | ⚠ 待确认（itch 条款） | ⚠ | ⚠ | 是 | 2026-09 |
+| Simple Grass Texture (addons/simplegrasstextured) | IcterusGames | github (addons LICENSE) | MIT | ✔ | ✔ | 保留版权声明 | 2026-09 |
+| 'Who Asks Satan' 字体 (ui/fonts) | — | dafont.com/who-asks-satan.font | ⚠ 待确认（daFont 作者条款） | ⚠ | ⚠ | 是 | 2026-09 |
+| Spooky Music Box BGM (audio/music) | — | pixabay.com | pixabay Content License | ✔ | ✔ | 否 | 2026-09 |
 
 ## 使用原则
 

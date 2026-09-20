@@ -1,0 +1,14 @@
+-----------------------------------------------------------------
+'Who Asks Satan' 字体 (assets/art/ui/fonts/who_asks_satan.ttf)
+-----------------------------------------------------------------
+Source: https://www.dafont.com/who-asks-satan.font
+
+⚠ 许可证状态：待确认（PENDING，需读取字体作者条款）
+daFont 字体是否允许商用 / 嵌入游戏需依据该作者在其字体页声明的许可，
+常见为「免费供个人使用」，商用与程序内嵌可能受限。
+
+  Commercial Use: 待确认（发布前须在 daFont 该字体页核实）
+  Modification Allowed: 待确认
+  Attribution Required: 是（保留作者署名）
+
+若该字体不允许商用，发布前请替换为免费商用字体。

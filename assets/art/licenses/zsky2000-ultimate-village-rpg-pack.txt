@@ -1,0 +1,18 @@
+-----------------------------------------------------------------
+Ultimate Village RPG Pack (environment/village, environment/nature/trees)
+村民铺/法师商店/风车/铁匠铺/面包店/街灯/道路/栅栏/树等低模 .obj
+-----------------------------------------------------------------
+Author: zsky2000
+Source: https://zsky2000.itch.io/ultimate-village-rpg-pack
+
+⚠ 许可证状态：待确认（PENDING）
+该资源来自 itch.io，其具体授权条款需在资源页面确认。
+截至本登记日期未能离线核实其 Commercial Use / Modification 条款。
+
+依据项目 License 管理制度「禁止使用无法确认商业授权的资源」，
+本组资源标注为 ⚠：
+  Commercial Use: 待确认（若其条款不允许商用，须在发布前替换/移除）
+  Modification Allowed: 待确认
+  Attribution Required: 是（保留作者 zsky2000）
+
+请在发布前在 https://zsky2000.itch.io/ultimate-village-rpg-pack 核实授权。
