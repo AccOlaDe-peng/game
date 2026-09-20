@@ -1,0 +1,21 @@
+LXGW WenKai (霞鹜文楷) — Regular
+
+	Font by lxgw ( Lundea / 霞鹜文楷 project )
+	Author GitHub: https://github.com/lxgw
+
+	Source:   https://github.com/lxgw/LxgwWenKai/releases/tag/v1.522
+	Files:    assets/art/ui/fonts/LXGWWenKai-Regular.ttf
+	Imported: 2026-09-20
+
+-------------------------------------------------------
+License:
+SIL Open Font License 1.1 (OFL-1.1)
+https://openfontlicense.org/
+
+Commercial use: allowed.
+Modification allowed (renaming required for derivatives).
+Attribution: required only when redistributing the font itself
+(keep the license and copyright notice with the font files);
+embedding/rendering in a game does not require attribution.
+
+Full OFL 1.1 text: https://github.com/lxgw/LxgwWenKai/blob/master/OFL.txt

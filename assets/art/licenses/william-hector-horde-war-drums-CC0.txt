@@ -1,0 +1,15 @@
+William Hector — Horde War Drums Loop
+
+	Music by William Hector
+
+	Source:   https://opengameart.org/content/horde-war-drums-loop
+	Files:    assets/audio/music/horde_war_drums.wav
+	Imported: 2026-09-20
+
+-------------------------------------------------------
+License:
+CC0 1.0 Universal (CC0 1.0) — Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Free for personal and commercial use, modification allowed,
+no attribution required.

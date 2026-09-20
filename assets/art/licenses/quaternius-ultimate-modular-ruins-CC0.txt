@@ -1,0 +1,22 @@
+Quaternius — Ultimate Modular Ruins (subset)
+
+	3D models by @Quaternius
+
+	Source:   https://quaternius.com/packs/ultimatemodularruins.html
+	Files:    assets/art/environment/ruins/*.fbx, Bark_Texture.jpg, Leaf_Texture.png
+	Imported: 2026-09-20
+
+-------------------------------------------------------
+License:
+CC0 1.0 Universal (CC0 1.0)
+Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+
+No Copyright — free for personal and commercial use,
+modification allowed, no attribution required.
+
+-------------------------------------------------------
+Models by @Quaternius
+Consider supporting me on Patreon!
+
+https://www.patreon.com/quaternius
