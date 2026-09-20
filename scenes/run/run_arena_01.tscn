@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3]
+[gd_scene load_steps=53 format=3]
 
 [ext_resource type="Script" path="res://scripts/run/RunRoot.cs" id="1_root"]
 [ext_resource type="Script" path="res://scripts/run/RunController.cs" id="2_controller"]
@@ -38,6 +38,8 @@
 [ext_resource type="Texture2D" path="res://assets/art/particles/circle_02.png" id="36_rune"]
 [ext_resource type="Script" path="res://scripts/passives/AutoCatalysisSystem.cs" id="37_autocatalysis"]
 [ext_resource type="Script" path="res://scripts/passives/PassiveSystem.cs" id="38_passives"]
+[ext_resource type="Script" path="res://scripts/presentation/BinbunBurstVfx.cs" id="39_fire_burst"]
+[ext_resource type="Script" path="res://scripts/presentation/ElementalBurstVfx.cs" id="40_element_burst"]
 
 [sub_resource type="Environment" id="Environment_arena"]
 background_mode = 1
@@ -342,6 +344,12 @@ script = ExtResource("18_reaction_vfx")
 [node name="CatalyzePulse" type="MultiMeshInstance3D" parent="WorldRoot/VfxRoot/ReactionPresentation"]
 
 [node name="LightningBeams" type="MultiMeshInstance3D" parent="WorldRoot/VfxRoot/ReactionPresentation"]
+
+[node name="FireBurst" type="Node3D" parent="WorldRoot/VfxRoot"]
+script = ExtResource("39_fire_burst")
+
+[node name="ElementBurst" type="Node3D" parent="WorldRoot/VfxRoot"]
+script = ExtResource("40_element_burst")
 
 [node name="EnemyAttackPresentation" type="Node3D" parent="WorldRoot/VfxRoot"]
 script = ExtResource("20_attack_vfx")

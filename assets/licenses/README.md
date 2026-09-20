@@ -26,6 +26,8 @@
 | Simple Grass Texture (addons/simplegrasstextured) | IcterusGames | github (addons LICENSE) | MIT | ✔ | ✔ | 保留版权声明 | 2026-09 |
 | 'Who Asks Satan' 字体 (ui/fonts) | — | dafont.com/who-asks-satan.font | ⚠ 待确认（daFont 作者条款） | ⚠ | ⚠ | 是 | 2026-09 |
 | Spooky Music Box BGM (audio/music) | — | pixabay.com | pixabay Content License | ✔ | ✔ | 否 | 2026-09 |
+| Elemental Magic FX – Free (art/vfx/BinbunVFX_Vol2) | Binbun (binbun3D) | binbun3d.itch.io/elemental-magic-fx | CC0 1.0 | ✔ | ✔ | 否 | 2026-09 |
+| Kenney Music Jingles 精选 (audio/music/ambient) | Kenney Vleugels | kenney.nl/assets/music-jingles | CC0 1.0 | ✔ | ✔ | 否 | 2026-09 |
 
 ## 使用原则
 

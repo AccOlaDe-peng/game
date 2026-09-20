@@ -1,0 +1,24 @@
+-----------------------------------------------------------------
+Elemental Magic FX - Free（自由版，火系 3 个效果）(assets/art/vfx/BinbunVFX_Vol2)
+-----------------------------------------------------------------
+Pack: Binbun Elemental Magic FX（binbun3D）
+Author: Binbun (binbun3D)
+Source: https://binbun3d.itch.io/elemental-magic-fx   （官方 itch 页）
+License: Creative Commons Zero, CC0 1.0
+         https://creativecommons.org/publicdomain/zero/1.0/
+
+  Commercial Use: ✔（免费供商业、个人、教育项目使用）
+  Modification Allowed: ✔（可修改）
+  Attribution Required: 否（无需署名）
+  可选致谢：可提及 'Binbun3D' 或 'bun3d.com'（非强制）
+
+允许用于本游戏一切用途（含商业发布），无需署名、无需声明来源。
+
+内置原文 license.txt（随包保留在
+assets/art/vfx/BinbunVFX_Vol2/ElementalMagicFX/license.txt）：
+
+  Elemental Magic FX is licensed under Creative Commons Zero (CC0)
+  https://creativecommons.org/publicdomain/zero/1.0/
+  You're free to use the assets in this pack for personal,
+  educational and commercial projects with no attribution required.
+  To support me you can mention me 'Binbun3D' or 'bun3d.com'

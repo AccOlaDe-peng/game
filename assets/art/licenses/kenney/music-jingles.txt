@@ -1,0 +1,16 @@
+-----------------------------------------------------------------
+Kenney Music Jingles 精选（assets/audio/music/ambient/ 氛围铃声，10 首）
+-----------------------------------------------------------------
+Pack: Kenney Music Jingles
+Author: Kenney Vleugels
+Source: https://kenney.nl/assets/music-jingles
+License: Creative Commons Zero, CC0 1.0
+         https://creativecommons.org/publicdomain/zero/1.0/
+
+  Commercial Use: ✔（可商用）
+  Modification Allowed: ✔（可修改）
+  Attribution Required: 否（无需署名）
+
+注：这些是 1-2 秒单音循环铃声（钢片琴/拨弦/8-Bit），适合标题/菜单/
+探索氛围点缀或鼓励性叮声，非长曲。若听感欠佳可随时替换其他乐段。
+原始许可页：https://kenney.nl/assets/music-jingles （标注 CC0）
