@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3]
+[gd_scene load_steps=54 format=3]
 
 [ext_resource type="Script" path="res://scripts/run/RunRoot.cs" id="1_root"]
 [ext_resource type="Script" path="res://scripts/run/RunController.cs" id="2_controller"]
@@ -40,6 +40,7 @@
 [ext_resource type="Script" path="res://scripts/passives/PassiveSystem.cs" id="38_passives"]
 [ext_resource type="Script" path="res://scripts/presentation/BinbunBurstVfx.cs" id="39_fire_burst"]
 [ext_resource type="Script" path="res://scripts/presentation/ElementalBurstVfx.cs" id="40_element_burst"]
+[ext_resource type="Script" path="res://scripts/presentation/BackgroundMusicSystem.cs" id="41_music"]
 
 [sub_resource type="Environment" id="Environment_arena"]
 background_mode = 1
@@ -139,6 +140,11 @@ radial_segments = 32
 
 [node name="RunRoot" type="Node"]
 script = ExtResource("1_root")
+
+[node name="Music" type="Node" parent="."]
+script = ExtResource("41_music")
+MusicPath = "Background.wav"
+BossMusicPath = "horde_war_drums.wav"
 
 [node name="WorldRoot" type="Node3D" parent="."]
 
