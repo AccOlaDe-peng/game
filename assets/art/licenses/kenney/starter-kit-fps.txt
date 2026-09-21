@@ -1,0 +1,15 @@
+-----------------------------------------------------------------
+Kenney Starter-Kit-FPS —— 仅提取 2 件武器 3D 模型
+  (assets/art/weapons/blaster.glb, blaster_repeater.glb)
+-----------------------------------------------------------------
+Repo: https://github.com/KenneyNL/Starter-Kit-FPS
+Author: Kenney Vleugels
+License: 双许可
+  1) 3D 模型等资产 —— CC0 1.0（可商用、可修改、无需署名）
+     README 原文: "Assets included in this package (2D sprites,
+     3D models and sound effects) are CC0 licensed"
+     https://creativecommons.org/publicdomain/zero/1.0/
+  2) 代码（.gd / .tres 脚手架）—— MIT（本项目未提取代码，仅取 .glb 模型）
+
+本目录仅导入两个 .glb 武器模型，属资产 CC0 范畴。
+原始许可：LICENSE.md（MIT，见包内）已归档，README 的资产 CC0 声明见上。

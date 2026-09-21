@@ -28,6 +28,7 @@
 | Spooky Music Box BGM (audio/music) | — | pixabay.com | pixabay Content License | ✔ | ✔ | 否 | 2026-09 |
 | Elemental Magic FX – Free (art/vfx/BinbunVFX_Vol2) | Binbun (binbun3D) | binbun3d.itch.io/elemental-magic-fx | CC0 1.0 | ✔ | ✔ | 否 | 2026-09 |
 | Kenney Music Jingles 精选 (audio/music/ambient) | Kenney Vleugels | kenney.nl/assets/music-jingles | CC0 1.0 | ✔ | ✔ | 否 | 2026-09 |
+| Starter-Kit-FPS 提取 2 件武器模型 (art/weapons) | Kenney Vleugels | github.com/KenneyNL/Starter-Kit-FPS | CC0 1.0（资产）；代码 MIT | ✔ | ✔ | 否 | 2026-09 |
 
 ## 使用原则
 
