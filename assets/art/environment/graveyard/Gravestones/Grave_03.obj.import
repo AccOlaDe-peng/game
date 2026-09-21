@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://0o7sy0l5ds0p"
-path="res://.godot/imported/Grave_03.obj-0ba847b56117e07ab320e9ddd36d4af8.mesh"
+path="res://.godot/imported/Grave_03.obj-2a111a72c1bce7f71f7dc28f8cb5edf8.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Grave_03.obj-0ba847b56117e07ab320e9ddd36d4af8.mesh"]
+files=["res://.godot/imported/Grave_03.obj-2a111a72c1bce7f71f7dc28f8cb5edf8.mesh"]
 
-source_file="res://Models/Environment/Gravestones/Grave_03.obj"
-dest_files=["res://.godot/imported/Grave_03.obj-0ba847b56117e07ab320e9ddd36d4af8.mesh", "res://.godot/imported/Grave_03.obj-0ba847b56117e07ab320e9ddd36d4af8.mesh"]
+source_file="res://assets/art/environment/graveyard/Gravestones/Grave_03.obj"
+dest_files=["res://.godot/imported/Grave_03.obj-2a111a72c1bce7f71f7dc28f8cb5edf8.mesh", "res://.godot/imported/Grave_03.obj-2a111a72c1bce7f71f7dc28f8cb5edf8.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

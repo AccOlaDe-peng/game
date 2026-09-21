@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://b50ht0ce0a63j"
-path="res://.godot/imported/TreasureBox_closed.obj-1524d7560996859feb296d3b5b261658.mesh"
+path="res://.godot/imported/TreasureBox_closed.obj-f4720053be8b2f4808f7c8edb6dace56.mesh"
 
 [deps]
 
-files=["res://.godot/imported/TreasureBox_closed.obj-1524d7560996859feb296d3b5b261658.mesh"]
+files=["res://.godot/imported/TreasureBox_closed.obj-f4720053be8b2f4808f7c8edb6dace56.mesh"]
 
-source_file="res://Models/Environment/Box/TreasureBox_closed.obj"
-dest_files=["res://.godot/imported/TreasureBox_closed.obj-1524d7560996859feb296d3b5b261658.mesh", "res://.godot/imported/TreasureBox_closed.obj-1524d7560996859feb296d3b5b261658.mesh"]
+source_file="res://assets/art/environment/village/Box/TreasureBox_closed.obj"
+dest_files=["res://.godot/imported/TreasureBox_closed.obj-f4720053be8b2f4808f7c8edb6dace56.mesh", "res://.godot/imported/TreasureBox_closed.obj-f4720053be8b2f4808f7c8edb6dace56.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

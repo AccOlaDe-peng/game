@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://fl1ledj1mbn3"
-path="res://.godot/imported/Plate.obj-e1c10c11c9d6d4be311e061a3076ac23.mesh"
+path="res://.godot/imported/Plate.obj-6eb0af4532b57dda29760c19f8f0b06d.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Plate.obj-e1c10c11c9d6d4be311e061a3076ac23.mesh"]
+files=["res://.godot/imported/Plate.obj-6eb0af4532b57dda29760c19f8f0b06d.mesh"]
 
-source_file="res://Models/Environment/Plate/Plate.obj"
-dest_files=["res://.godot/imported/Plate.obj-e1c10c11c9d6d4be311e061a3076ac23.mesh", "res://.godot/imported/Plate.obj-e1c10c11c9d6d4be311e061a3076ac23.mesh"]
+source_file="res://assets/art/environment/village/Plate/Plate.obj"
+dest_files=["res://.godot/imported/Plate.obj-6eb0af4532b57dda29760c19f8f0b06d.mesh", "res://.godot/imported/Plate.obj-6eb0af4532b57dda29760c19f8f0b06d.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

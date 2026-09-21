@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://csntfll5yxcao"
-path="res://.godot/imported/Bakery.obj-9b27e5c1057404424e656611a54bc42b.mesh"
+path="res://.godot/imported/Bakery.obj-84fa42f5c7e873648295758a37e87772.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Bakery.obj-9b27e5c1057404424e656611a54bc42b.mesh"]
+files=["res://.godot/imported/Bakery.obj-84fa42f5c7e873648295758a37e87772.mesh"]
 
-source_file="res://Models/Environment/Bakery/Bakery.obj"
-dest_files=["res://.godot/imported/Bakery.obj-9b27e5c1057404424e656611a54bc42b.mesh", "res://.godot/imported/Bakery.obj-9b27e5c1057404424e656611a54bc42b.mesh"]
+source_file="res://assets/art/environment/village/Bakery/Bakery.obj"
+dest_files=["res://.godot/imported/Bakery.obj-84fa42f5c7e873648295758a37e87772.mesh", "res://.godot/imported/Bakery.obj-84fa42f5c7e873648295758a37e87772.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

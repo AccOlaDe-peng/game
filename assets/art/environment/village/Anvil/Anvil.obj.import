@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://dpeps6cacp8r2"
-path="res://.godot/imported/Anvil.obj-6c614bfd1f8b0f1d6d530e0ba4086a6f.mesh"
+path="res://.godot/imported/Anvil.obj-3f0677607e699dc1d472cef720c66fd0.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Anvil.obj-6c614bfd1f8b0f1d6d530e0ba4086a6f.mesh"]
+files=["res://.godot/imported/Anvil.obj-3f0677607e699dc1d472cef720c66fd0.mesh"]
 
-source_file="res://Models/Environment/Anvil/Anvil.obj"
-dest_files=["res://.godot/imported/Anvil.obj-6c614bfd1f8b0f1d6d530e0ba4086a6f.mesh", "res://.godot/imported/Anvil.obj-6c614bfd1f8b0f1d6d530e0ba4086a6f.mesh"]
+source_file="res://assets/art/environment/village/Anvil/Anvil.obj"
+dest_files=["res://.godot/imported/Anvil.obj-3f0677607e699dc1d472cef720c66fd0.mesh", "res://.godot/imported/Anvil.obj-3f0677607e699dc1d472cef720c66fd0.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

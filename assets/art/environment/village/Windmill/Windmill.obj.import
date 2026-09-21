@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://btwdo13ehcllu"
-path="res://.godot/imported/Windmill.obj-e73563016ca225c4deeab6f9e9ac2c51.mesh"
+path="res://.godot/imported/Windmill.obj-ec049a60a52ce6945e251536f09ef6aa.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Windmill.obj-e73563016ca225c4deeab6f9e9ac2c51.mesh"]
+files=["res://.godot/imported/Windmill.obj-ec049a60a52ce6945e251536f09ef6aa.mesh"]
 
-source_file="res://Models/Environment/Windmill/Windmill.obj"
-dest_files=["res://.godot/imported/Windmill.obj-e73563016ca225c4deeab6f9e9ac2c51.mesh", "res://.godot/imported/Windmill.obj-e73563016ca225c4deeab6f9e9ac2c51.mesh"]
+source_file="res://assets/art/environment/village/Windmill/Windmill.obj"
+dest_files=["res://.godot/imported/Windmill.obj-ec049a60a52ce6945e251536f09ef6aa.mesh", "res://.godot/imported/Windmill.obj-ec049a60a52ce6945e251536f09ef6aa.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

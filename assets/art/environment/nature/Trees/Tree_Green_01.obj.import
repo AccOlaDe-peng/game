@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://dijm7m8jtfpac"
-path="res://.godot/imported/Tree_Green_01.obj-b4add6c73344fd79d6e47e221f1431e5.mesh"
+path="res://.godot/imported/Tree_Green_01.obj-ff0a0f02af6602b0a324d903afed1145.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Tree_Green_01.obj-b4add6c73344fd79d6e47e221f1431e5.mesh"]
+files=["res://.godot/imported/Tree_Green_01.obj-ff0a0f02af6602b0a324d903afed1145.mesh"]
 
-source_file="res://Models/Environment/Trees/Tree_Green_01.obj"
-dest_files=["res://.godot/imported/Tree_Green_01.obj-b4add6c73344fd79d6e47e221f1431e5.mesh", "res://.godot/imported/Tree_Green_01.obj-b4add6c73344fd79d6e47e221f1431e5.mesh"]
+source_file="res://assets/art/environment/nature/Trees/Tree_Green_01.obj"
+dest_files=["res://.godot/imported/Tree_Green_01.obj-ff0a0f02af6602b0a324d903afed1145.mesh", "res://.godot/imported/Tree_Green_01.obj-ff0a0f02af6602b0a324d903afed1145.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

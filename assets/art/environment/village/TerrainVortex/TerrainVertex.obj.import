@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://bt8lmfu0dd3xj"
-path="res://.godot/imported/TerrainVertex.obj-9d9c3d8337eeed589fc5bb3d1bbf01d2.mesh"
+path="res://.godot/imported/TerrainVertex.obj-ab5ef34c408f74c45549656ff5564ac8.mesh"
 
 [deps]
 
-files=["res://.godot/imported/TerrainVertex.obj-9d9c3d8337eeed589fc5bb3d1bbf01d2.mesh"]
+files=["res://.godot/imported/TerrainVertex.obj-ab5ef34c408f74c45549656ff5564ac8.mesh"]
 
-source_file="res://Models/Environment/TerrainVortex/TerrainVertex.obj"
-dest_files=["res://.godot/imported/TerrainVertex.obj-9d9c3d8337eeed589fc5bb3d1bbf01d2.mesh", "res://.godot/imported/TerrainVertex.obj-9d9c3d8337eeed589fc5bb3d1bbf01d2.mesh"]
+source_file="res://assets/art/environment/village/TerrainVortex/TerrainVertex.obj"
+dest_files=["res://.godot/imported/TerrainVertex.obj-ab5ef34c408f74c45549656ff5564ac8.mesh", "res://.godot/imported/TerrainVertex.obj-ab5ef34c408f74c45549656ff5564ac8.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

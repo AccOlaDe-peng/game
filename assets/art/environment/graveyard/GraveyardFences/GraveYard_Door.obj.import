@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://bq54kskbmmxsi"
-path="res://.godot/imported/GraveYard_Door.obj-6e69a17c91c3c6f469faa803b42aa68e.mesh"
+path="res://.godot/imported/GraveYard_Door.obj-ce37076a2841b8f365ac2334cc2120cb.mesh"
 
 [deps]
 
-files=["res://.godot/imported/GraveYard_Door.obj-6e69a17c91c3c6f469faa803b42aa68e.mesh"]
+files=["res://.godot/imported/GraveYard_Door.obj-ce37076a2841b8f365ac2334cc2120cb.mesh"]
 
-source_file="res://Models/Environment/GraveyardFences/GraveYard_Door.obj"
-dest_files=["res://.godot/imported/GraveYard_Door.obj-6e69a17c91c3c6f469faa803b42aa68e.mesh", "res://.godot/imported/GraveYard_Door.obj-6e69a17c91c3c6f469faa803b42aa68e.mesh"]
+source_file="res://assets/art/environment/graveyard/GraveyardFences/GraveYard_Door.obj"
+dest_files=["res://.godot/imported/GraveYard_Door.obj-ce37076a2841b8f365ac2334cc2120cb.mesh", "res://.godot/imported/GraveYard_Door.obj-ce37076a2841b8f365ac2334cc2120cb.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false

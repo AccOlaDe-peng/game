@@ -4,18 +4,22 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://c24rs1y71s8fx"
-path="res://.godot/imported/Cauldron.obj-385472c4cd537606d1f445ef62efb6b0.mesh"
+path="res://.godot/imported/Cauldron.obj-bac02f796462950c1e35c4db5d769e78.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Cauldron.obj-385472c4cd537606d1f445ef62efb6b0.mesh"]
+files=["res://.godot/imported/Cauldron.obj-bac02f796462950c1e35c4db5d769e78.mesh"]
 
-source_file="res://Models/Environment/Couldron/Cauldron.obj"
-dest_files=["res://.godot/imported/Cauldron.obj-385472c4cd537606d1f445ef62efb6b0.mesh", "res://.godot/imported/Cauldron.obj-385472c4cd537606d1f445ef62efb6b0.mesh"]
+source_file="res://assets/art/environment/village/Couldron/Cauldron.obj"
+dest_files=["res://.godot/imported/Cauldron.obj-bac02f796462950c1e35c4db5d769e78.mesh", "res://.godot/imported/Cauldron.obj-bac02f796462950c1e35c4db5d769e78.mesh"]
 
 [params]
 
 generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
 scale_mesh=Vector3(1, 1, 1)
 offset_mesh=Vector3(0, 0, 0)
-optimize_mesh=true
+force_disable_mesh_compression=false
